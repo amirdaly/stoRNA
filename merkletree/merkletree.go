@@ -28,6 +28,7 @@ type Node struct {
 	dup    bool
 	Hash   []byte
 	C      Content
+	Index  []string
 }
 
 func buildWithContent(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
@@ -36,12 +37,13 @@ func buildWithContent(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
 	}
 
 	var leafs []*Node
+	var index []string
 	for _, c := range cs {
 		hash, err := c.CalculateHash()
 		if err != nil {
 			return nil, nil, err
 		}
-
+		//index = math.Logb(cs)
 		leafs = append(leafs, &Node{
 			Hash: hash,
 			C:    c,

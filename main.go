@@ -25,6 +25,7 @@ func (t TestContent) Equals(other merkletree.Content) (bool, error) {
 }
 
 func main() {
+
 	var list []merkletree.Content
 	list = append(list, TestContent{x: "amir"})
 	list = append(list, TestContent{x: "ali"})
@@ -35,6 +36,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	fmt.Println(t)
+	//var index []string
+	//bits := math.Logb(8) + 1
 
 }
