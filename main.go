@@ -38,7 +38,7 @@ func main() {
 	}
 
 	fmt.Println(t)
-	//var index []string
+	var index []string
 	//bits := math.Logb(8) + 1
 
 }
