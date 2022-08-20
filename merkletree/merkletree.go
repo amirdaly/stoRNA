@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"hash"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -33,18 +34,47 @@ type Node struct {
 	index  string
 }
 
-func addNode(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
+func AddNode(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
+	if len(cs) == 0 {
+		return t.Root, t.Leafs, nil
+	}
+
 	var nodeCount int
 	nodeCount = len(t.Leafs)
 	inCount := len(cs)
 	leafCount := nodeCount + inCount
+	indexLength := int(math.Round(math.Log2(float64(leafCount) + 1)))
 
-	for i := 0; i < inCount; i++ {
-		if (inCount % 2) != 0 {
-			index = "01"
+	if t.Leafs[0].index == "0" { // just have one node
+		index := integerToBinaryString(0, indexLength)
+		t.Leafs[0].index = index
+	}
+
+	if nodeCount >= 1 {
+		for i := 0; i < nodeCount; i++ {
+
+			iindex := integerToBinaryString(i, indexLength)
+			t.Leafs[i].index = iindex
+		}
+		in := nodeCount
+		for _, c := range cs {
+			hash, err := c.CalculateHash()
+			if err != nil {
+				return nil, nil, err
+			}
+			iindex := integerToBinaryString(in, indexLength)
+			t.Leafs = append(t.Leafs, &Node{
+				Hash:  hash,
+				C:     c,
+				leaf:  true,
+				Tree:  t,
+				index: iindex,
+			})
+			in += 1
 		}
 	}
 
+	return t.Leafs[0], t.Leafs, nil
 }
 
 func buildWithContent(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
