@@ -41,7 +41,7 @@ func addNode(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
 
 	for i := 0; i < inCount; i++ {
 		if (inCount % 2) != 0 {
-			in
+			index = "01"
 		}
 	}
 
