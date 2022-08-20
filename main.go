@@ -37,7 +37,7 @@ func main() {
 	// 	log.Fatal(err)
 	// }
 
-	var y, z []merkletree.Content
+	var x, y, z []merkletree.Content
 
 	z = append(z, TestContent{x: "amir"})
 	t, err := merkletree.NewTreeGenesis(z, 2)
@@ -47,8 +47,8 @@ func main() {
 	fmt.Println(t)
 	fmt.Println("---------------------------------")
 
-	y = append(y, TestContent{x: "ali"})
-	merkletree.AddNode(y, t)
+	x = append(x, TestContent{x: "ali"})
+	merkletree.AddNode(x, t)
 	if err != nil {
 		log.Fatal(err)
 	}
