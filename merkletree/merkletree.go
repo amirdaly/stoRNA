@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"hash"
+	"strconv"
+	"strings"
 )
 
 type Content interface {
@@ -28,6 +30,21 @@ type Node struct {
 	dup    bool
 	Hash   []byte
 	C      Content
+	index  string
+}
+
+func addNode(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
+	var nodeCount int
+	nodeCount = len(t.Leafs)
+	inCount := len(cs)
+	leafCount := nodeCount + inCount
+
+	for i := 0; i < inCount; i++ {
+		if (inCount % 2) != 0 {
+			in
+		}
+	}
+
 }
 
 func buildWithContent(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
@@ -110,8 +127,31 @@ func NewTree(cs []Content) (*MerkleTree, error) {
 	return t, nil
 }
 
+func NewTreeGenesis(cs []Content, length int) (*MerkleTree, error) {
+	var defaultHashStrategy = sha256.New
+	t := &MerkleTree{hashStrategy: defaultHashStrategy}
+	var leafs []*Node
+
+	hash, err := cs[0].CalculateHash()
+	if err != nil {
+		return nil, err
+	}
+	leafs = append(leafs, &Node{
+		Hash: hash,
+		C:    cs[0],
+		leaf: true,
+		Tree: t,
+		// index: integerToBinaryString(0, length),
+		index: "0",
+	})
+	t.Root = leafs[0]
+	t.Leafs = leafs
+	t.merkleRoot = hash
+	return t, nil
+}
+
 func (n *Node) String() string {
-	return fmt.Sprintf("leaf: %t - duplicate: %t | hash: %x data: %s", n.leaf, n.dup, n.Hash, n.C)
+	return fmt.Sprintf("index: %s | leaf: %t | hash: %x data: %s", n.index, n.leaf, n.Hash, n.C)
 }
 
 func (m *MerkleTree) String() string {
@@ -121,4 +161,12 @@ func (m *MerkleTree) String() string {
 		s += "\n"
 	}
 	return s
+}
+
+func integerToBinaryString(num int, length int) string {
+	binaryString := strconv.FormatInt(int64(num), 2)
+	if len(binaryString) >= length {
+		return binaryString
+	}
+	return strings.Repeat("0", length-len(binaryString)) + binaryString
 }
