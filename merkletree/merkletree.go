@@ -24,7 +24,7 @@ type MerkleTree struct {
 
 type Node struct {
 	Tree   *MerkleTree
-	Parent *Node
+	Parent []*Node
 	Left   *Node
 	Right  *Node
 	leaf   bool
@@ -34,42 +34,121 @@ type Node struct {
 	index  string
 }
 
+func exportParentsIndex(index string, length int) []string {
+	var parentsIndexString []string
+	if len(index) == length && !strings.Contains(index, "1") {
+		parentsIndexString = append(parentsIndexString, index)
+		return parentsIndexString
+	} else if len(index) == length && strings.Contains(index, "1") {
+		for i := length - 1; i >= 0; i-- {
+			newstr := index
+			if index[i] == '1' {
+				newstr = index[:i] + string('0')
+				parentsIndexString = append(parentsIndexString, newstr)
+			}
+		}
+	}
+	return parentsIndexString
+}
+
+func checkParent(node *Node, length int) []*Node {
+	var parents []*Node
+	if len(node.index) == length && !strings.Contains(node.index, "1") {
+		parents = append(parents, node)
+		return parents
+	} else if len(node.index) == length && strings.Contains(node.index, "1") {
+		for i := len(node.index) - 1; i >= 0; i-- {
+			str := node.index
+			var parentsStrings []string
+			if str[i] == '1' {
+				newstr := str[:i] + string('0')
+				parentsStrings = append(parentsStrings, newstr)
+			}
+		}
+	}
+	return parents
+}
+
+func IsNodeInTree(index string, t *MerkleTree) *Node {
+	for _, i := range t.Leafs {
+		if i.index == index {
+			return i
+		}
+	}
+	return nil
+}
+
 func AddNode(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
 	if len(cs) == 0 {
 		return t.Root, t.Leafs, nil
 	}
 
-	var nodeCount int
-	nodeCount = len(t.Leafs)
-	inCount := len(cs)
-	leafCount := nodeCount + inCount
-	indexLength := int(math.Round(math.Log2(float64(leafCount) + 1)))
+	var leafsCountHad int
+	leafsCountHad = len(t.Leafs)
+	leafsInCount := len(cs)
+	newLeafsCount := leafsCountHad + leafsInCount
+	indexLength := int(math.Round(math.Log2(float64(newLeafsCount)) + 1))
 
 	if t.Leafs[0].index == "0" { // just have one node
 		index := integerToBinaryString(0, indexLength)
 		t.Leafs[0].index = index
 	}
 
-	if nodeCount >= 1 {
-		for i := 0; i < nodeCount; i++ {
-
+	if leafsCountHad >= 1 {
+		for i := 0; i < leafsCountHad; i++ {
 			iindex := integerToBinaryString(i, indexLength)
 			t.Leafs[i].index = iindex
+			parentsIndexString := exportParentsIndex(iindex, indexLength)
+
+			for _, x := range parentsIndexString {
+				if IsNodeInTree(x, t) != nil {
+					var tmpParent *Node
+					tmpParent = IsNodeInTree(x, t)
+					t.Leafs[i].Parent = append(t.Leafs[i].Parent, tmpParent)
+				} else {
+					newNode := &Node{
+						Tree:  t,
+						index: x,
+					}
+					t.Leafs = append(t.Leafs, newNode)
+					t.Leafs[i].Parent = append(t.Leafs[i].Parent, newNode)
+				}
+			}
+
 		}
-		in := nodeCount
+
+		in := leafsCountHad
 		for _, c := range cs {
+			var newNode *Node
 			hash, err := c.CalculateHash()
 			if err != nil {
 				return nil, nil, err
 			}
 			iindex := integerToBinaryString(in, indexLength)
-			t.Leafs = append(t.Leafs, &Node{
+			newNode = &Node{
 				Hash:  hash,
 				C:     c,
 				leaf:  true,
 				Tree:  t,
 				index: iindex,
-			})
+			}
+			parentsIndexString := exportParentsIndex(iindex, indexLength)
+			for _, x := range parentsIndexString {
+				if IsNodeInTree(x, t) != nil {
+					var tmpParent *Node
+					tmpParent = IsNodeInTree(x, t)
+					newNode.Parent = append(newNode.Parent, tmpParent)
+				} else {
+					newNode2 := &Node{
+						Tree:  t,
+						index: x,
+					}
+					t.Leafs = append(t.Leafs, newNode2)
+					newNode.Parent = append(newNode.Parent, newNode2)
+				}
+			}
+
+			t.Leafs = append(t.Leafs, newNode)
 			in += 1
 		}
 	}
@@ -135,8 +214,8 @@ func buildIntermediate(nl []*Node, t *MerkleTree) (*Node, error) {
 			Tree:  t,
 		}
 		nodes = append(nodes, n)
-		nl[left].Parent = n
-		nl[right].Parent = n
+		// nl[left].Parent = n
+		// nl[right].Parent = n
 		if len(nl) == 2 {
 			return n, nil
 		}

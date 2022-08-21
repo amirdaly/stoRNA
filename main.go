@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"merkletree/merkletree"
+	"strings"
 )
 
 //------------------------------ Testbed Area ----------------------
@@ -39,7 +40,7 @@ func main() {
 
 	var x, y, z []merkletree.Content
 
-	z = append(z, TestContent{x: "amir"})
+	z = append(z, TestContent{x: "a"})
 	t, err := merkletree.NewTreeGenesis(z, 2)
 	if err != nil {
 		log.Fatal(err)
@@ -47,7 +48,9 @@ func main() {
 	fmt.Println(t)
 	fmt.Println("---------------------------------")
 
-	x = append(x, TestContent{x: "ali"})
+	x = append(x, TestContent{x: "b"})
+	x = append(x, TestContent{x: "c"})
+	x = append(x, TestContent{x: "d"})
 	merkletree.AddNode(x, t)
 	if err != nil {
 		log.Fatal(err)
@@ -55,13 +58,32 @@ func main() {
 	fmt.Println(t)
 	fmt.Println("---------------------------------")
 
-	y = append(y, TestContent{x: "zahra"})
-	y = append(y, TestContent{x: "sara"})
-	y = append(y, TestContent{x: "mm"})
+	y = append(y, TestContent{x: "e"})
+	y = append(y, TestContent{x: "f"})
+	y = append(y, TestContent{x: "g"})
+	y = append(y, TestContent{x: "h"})
+	y = append(y, TestContent{x: "i"})
+	y = append(y, TestContent{x: "j"})
 	merkletree.AddNode(y, t)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println(t)
 
+}
+func exportParentsIndex(index string, length int) []string {
+	var parentsIndexString []string
+	if len(index) == length && !strings.Contains(index, "1") {
+		parentsIndexString = append(parentsIndexString, index)
+		return parentsIndexString
+	} else if len(index) == length && strings.Contains(index, "1") {
+		for i := length - 1; i >= 0; i-- {
+			newstr := index
+			if index[i] == '1' {
+				newstr = index[:i] + string('0')
+				parentsIndexString = append(parentsIndexString, newstr)
+			}
+		}
+	}
+	return parentsIndexString
 }
