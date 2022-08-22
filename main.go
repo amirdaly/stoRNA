@@ -69,7 +69,6 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println(t)
-	fmt.Println("parents of 1011 are: ", exportParentsIndex("1011", 4))
 
 }
 func exportParentsIndex(index string, length int) []string {
