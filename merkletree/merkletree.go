@@ -89,22 +89,24 @@ func AddNode(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
 	newLeafsCount := leafsCountHad + leafsInCount
 	indexLength := int(math.Round(math.Log2(float64(newLeafsCount)) + 1))
 
-	if t.Leafs[0].index == "0" { // just have one node
-		index := integerToBinaryString(0, indexLength)
-		t.Leafs[0].index = index
-	}
+	index := integerToBinaryString(0, indexLength)
+	t.Leafs[0].index = index
+	t.Leafs[0].Parent = append(t.Leafs[0].Parent, t.Leafs[0])
+	fmt.Println("added zero node", index)
 
 	if leafsCountHad >= 1 {
-		for i := 0; i < leafsCountHad; i++ {
+		for i := 1; i < leafsCountHad; i++ {
 			iindex := integerToBinaryString(i, indexLength)
 			t.Leafs[i].index = iindex
 			parentsIndexString := exportParentsIndex(iindex, indexLength)
 
 			for _, x := range parentsIndexString {
 				if IsNodeInTree(x, t) != nil {
+					fmt.Println("is not in tree ", i, " : ", x)
 					var tmpParent *Node
 					tmpParent = IsNodeInTree(x, t)
 					t.Leafs[i].Parent = append(t.Leafs[i].Parent, tmpParent)
+
 				} else {
 					newNode := &Node{
 						Tree:  t,
@@ -112,6 +114,7 @@ func AddNode(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
 					}
 					t.Leafs = append(t.Leafs, newNode)
 					t.Leafs[i].Parent = append(t.Leafs[i].Parent, newNode)
+					fmt.Println("is in tree ", i, " : ", x)
 				}
 			}
 
