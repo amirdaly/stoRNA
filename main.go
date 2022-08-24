@@ -82,7 +82,13 @@ func main() {
 	merkletree.AddNodeToTree(t4, t, 2)
 	fmt.Println(t)
 
-	fmt.Println(t.Levels)
+	for i := 0; i < len(t.Levels); i++ {
+		for _, j := range t.Levels[i] {
+			fmt.Println("Level ", i, " nodes are:", j.Number, ":", j.Index)
+		}
+
+	}
+
 }
 func exportParentsIndex(index string, length int) []string {
 	var parentsIndexString []string

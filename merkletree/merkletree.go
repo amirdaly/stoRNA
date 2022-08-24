@@ -34,8 +34,8 @@ type Node struct {
 	dup    bool
 	Hash   []byte
 	C      Content
-	index  string
-	number int
+	Index  string
+	Number int
 }
 
 func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
@@ -52,8 +52,8 @@ func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
 		C:    cs,
 		leaf: true,
 		Tree: t,
-		// index: integerToBinaryString(0, length),
-		index: "0",
+		// Index: integerToBinaryString(0, length),
+		Index: "0",
 	})
 	t.Root = nodes[0]
 	t.Nodes = nodes
@@ -63,7 +63,7 @@ func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
 	level[0] = append(level[0], emptyNode)
 	level[1] = append(level[1], t.Nodes[0])
 	t.Levels = level
-	t.Nodes[0].number = 1 //add navigation number 1 to first node of tree
+	t.Nodes[0].Number = 1 //add navigation Number 1 to first node of tree
 	return t, nil
 }
 
@@ -79,16 +79,16 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 	// treeNewNodesToAddCount := 1                 // count of new nodes that will be added to Tree
 	treeDepthLength := depth // depth of Tree and Number Of edge Index Bytes
 
-	// for N (Max number of Merkle Tree Nodes) start to navigate whole tree
+	// for N (Max Number of Merkle Tree Nodes) start to navigate whole tree
 	// At first we will check the tree depth. if depth is growing up we must update Node Index strings
 	// if depth of tree is not changing, we must just Add new nodes to their places
-	//update nodes index to new strings
+	//update nodes Index to new strings
 
 	// is leaf or not
-	// traversing number
-	// index string
+	// traversing Number
+	// Index string
 
-	if len(t.Nodes[0].index) < depth {
+	if len(t.Nodes[0].Index) < depth {
 		updateNodesIndex(t, treeDepthLength) //"00"
 	}
 
@@ -104,8 +104,8 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 			C:      cs,
 			leaf:   true,
 			Tree:   t,
-			number: 2,
-			index:  x,
+			Number: 2,
+			Index:  x,
 		}
 		t.Nodes = append(t.Nodes, newNode)
 		t.Levels[2] = append(t.Levels[2], newNode)
@@ -132,8 +132,8 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 				C:      cs,
 				leaf:   true,
 				Tree:   t,
-				number: traversingNumber,
-				index:  x,
+				Number: traversingNumber,
+				Index:  x,
 			}
 			t.Nodes = append(t.Nodes, newNode)
 			t.Nodes[i-1].Parent = append(t.Nodes[i-1].Parent, newNode)
@@ -143,18 +143,19 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 			if err != nil {
 				return nil, nil, err
 			}
-			x := beforeNode.index[:depth-1]
+			x := beforeNode.Index[:depth-1]
 			newNode := &Node{
 				Hash:   hash,
 				C:      cs,
 				leaf:   false,
 				Tree:   t,
-				number: traversingNumber,
-				index:  x,
+				Number: traversingNumber,
+				Index:  x,
 				Left:   t.Nodes[i-2],
 				Right:  t.Nodes[i-1],
 			}
 			t.Nodes = append(t.Nodes, newNode)
+			t.Levels[len(x)] = append(t.Levels[len(x)], newNode)
 			t.Nodes[1].Parent = append(t.Nodes[1].Parent, newNode)
 			return t.Root, t.Nodes, nil
 		}
@@ -174,15 +175,15 @@ func countLeafs(t *MerkleTree) int {
 
 func updateNodesIndex(t *MerkleTree, depth int) bool {
 	T := false
-	if (depth - len(t.Nodes[0].index)) >= 1 {
+	if (depth - len(t.Nodes[0].Index)) >= 1 {
 		t.Levels = nil
 		emptyNode := &Node{Tree: t}
 		level := make(map[int][]*Node)
 		level[0] = append(level[0], emptyNode)
 		for _, i := range t.Nodes {
-			tmpIndex := i.index
-			newIndex := strings.Repeat("0", depth-len(t.Nodes[0].index)) + tmpIndex
-			i.index = newIndex
+			tmpIndex := i.Index
+			newIndex := strings.Repeat("0", depth-len(t.Nodes[0].Index)) + tmpIndex
+			i.Index = newIndex
 			l := len(newIndex)
 			level[l] = append(level[l], i)
 			T = true
@@ -202,20 +203,20 @@ func AddNode(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
 	leafsCountHad = len(t.Nodes)
 	leafsInCount := len(cs)
 	newNodesCount := leafsCountHad + leafsInCount
-	indexLength := int(math.Round(math.Log2(float64(newNodesCount)) + 1))
+	IndexLength := int(math.Round(math.Log2(float64(newNodesCount)) + 1))
 
-	// node zero index reimpliment
-	index := integerToBinaryString(0, indexLength)
-	t.Nodes[0].index = index
+	// node zero Index reimpliment
+	Index := integerToBinaryString(0, IndexLength)
+	t.Nodes[0].Index = Index
 	t.Nodes[0].Parent = append(t.Nodes[0].Parent, t.Nodes[0])
-	fmt.Println("added zero node", index)
+	fmt.Println("added zero node", Index)
 	//-----------------------------------
 
 	if leafsCountHad >= 1 {
 		for i := 1; i < leafsCountHad; i++ {
-			iindex := integerToBinaryString(i, indexLength)
-			t.Nodes[i].index = iindex
-			parentsIndexString := exportParentsIndex(iindex, indexLength)
+			iIndex := integerToBinaryString(i, IndexLength)
+			t.Nodes[i].Index = iIndex
+			parentsIndexString := exportParentsIndex(iIndex, IndexLength)
 
 			for _, x := range parentsIndexString {
 				if IsNodeInTree(x, t) != nil {
@@ -226,7 +227,7 @@ func AddNode(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
 				} else {
 					newNode := &Node{
 						Tree:  t,
-						index: x,
+						Index: x,
 					}
 					t.Nodes = append(t.Nodes, newNode)
 					t.Nodes[i].Parent = append(t.Nodes[i].Parent, newNode)
@@ -243,15 +244,15 @@ func AddNode(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
 			if err != nil {
 				return nil, nil, err
 			}
-			iindex := integerToBinaryString(in, indexLength)
+			iIndex := integerToBinaryString(in, IndexLength)
 			newNode = &Node{
 				Hash:  hash,
 				C:     c,
 				leaf:  true,
 				Tree:  t,
-				index: iindex,
+				Index: iIndex,
 			}
-			parentsIndexString := exportParentsIndex(iindex, indexLength)
+			parentsIndexString := exportParentsIndex(iIndex, IndexLength)
 			for _, x := range parentsIndexString {
 				if IsNodeInTree(x, t) != nil {
 					var tmpParent *Node
@@ -260,7 +261,7 @@ func AddNode(cs []Content, t *MerkleTree) (*Node, []*Node, error) {
 				} else {
 					newNode2 := &Node{
 						Tree:  t,
-						index: x,
+						Index: x,
 					}
 					t.Nodes = append(t.Nodes, newNode2)
 					newNode.Parent = append(newNode.Parent, newNode2)
@@ -356,7 +357,7 @@ func NewTree(cs []Content) (*MerkleTree, error) {
 }
 
 func (n *Node) String() string {
-	return fmt.Sprintf("number: %d | index: %s | leaf: %t | hash: %x data: %s", n.number, n.index, n.leaf, n.Hash, n.C)
+	return fmt.Sprintf("Number: %d | Index: %s | leaf: %t | hash: %x data: %s", n.Number, n.Index, n.leaf, n.Hash, n.C)
 }
 
 func (m *MerkleTree) String() string {
@@ -376,16 +377,16 @@ func integerToBinaryString(num int, length int) string {
 	return strings.Repeat("0", length-len(binaryString)) + binaryString
 }
 
-func exportParentsIndex(index string, length int) []string {
+func exportParentsIndex(Index string, length int) []string {
 	var parentsIndexString []string
-	if len(index) == length && !strings.Contains(index, "1") {
-		parentsIndexString = append(parentsIndexString, index)
+	if len(Index) == length && !strings.Contains(Index, "1") {
+		parentsIndexString = append(parentsIndexString, Index)
 		return parentsIndexString
-	} else if len(index) == length && strings.Contains(index, "1") {
+	} else if len(Index) == length && strings.Contains(Index, "1") {
 		for i := length - 1; i >= 0; i-- {
-			newstr := index
-			if index[i] == '1' {
-				newstr = index[:i] + string('0')
+			newstr := Index
+			if Index[i] == '1' {
+				newstr = Index[:i] + string('0')
 				parentsIndexString = append(parentsIndexString, newstr)
 			}
 		}
@@ -395,12 +396,12 @@ func exportParentsIndex(index string, length int) []string {
 
 func checkParent(node *Node, length int) []*Node {
 	var parents []*Node
-	if len(node.index) == length && !strings.Contains(node.index, "1") {
+	if len(node.Index) == length && !strings.Contains(node.Index, "1") {
 		parents = append(parents, node)
 		return parents
-	} else if len(node.index) == length && strings.Contains(node.index, "1") {
-		for i := len(node.index) - 1; i >= 0; i-- {
-			str := node.index
+	} else if len(node.Index) == length && strings.Contains(node.Index, "1") {
+		for i := len(node.Index) - 1; i >= 0; i-- {
+			str := node.Index
 			var parentsStrings []string
 			if str[i] == '1' {
 				newstr := str[:i] + string('0')
@@ -411,9 +412,9 @@ func checkParent(node *Node, length int) []*Node {
 	return parents
 }
 
-func IsNodeInTree(index string, t *MerkleTree) *Node {
+func IsNodeInTree(Index string, t *MerkleTree) *Node {
 	for _, i := range t.Nodes {
-		if i.index == index {
+		if i.Index == Index {
 			return i
 		}
 	}
