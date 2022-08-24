@@ -38,38 +38,51 @@ func main() {
 	// 	log.Fatal(err)
 	// }
 
-	var x, y, z []merkletree.Content
+	// var x, y, z []merkletree.Content
 
-	z = append(z, TestContent{x: "a"})
-	t, err := merkletree.NewTreeGenesis(z, 2)
+	// z = append(z, TestContent{x: "a"})
+	// t, err := merkletree.NewTreeGenesis(z, 2)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println(t)
+	// fmt.Println("---------------------------------")
+
+	// x = append(x, TestContent{x: "b"})
+	// x = append(x, TestContent{x: "c"})
+	// x = append(x, TestContent{x: "d"})
+	// merkletree.AddNode(x, t)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println(t)
+	// fmt.Println("---------------------------------")
+
+	// y = append(y, TestContent{x: "e"})
+	// y = append(y, TestContent{x: "f"})
+	// y = append(y, TestContent{x: "g"})
+	// y = append(y, TestContent{x: "h"})
+	// y = append(y, TestContent{x: "i"})
+	// y = append(y, TestContent{x: "j"})
+	// merkletree.AddNode(y, t)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	t1 := TestContent{x: "a"}
+	t, err := merkletree.NewTreeGenesis(t1, 1)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(t)
-	fmt.Println("---------------------------------")
+	t2 := TestContent{x: "b"}
+	merkletree.AddNodeToTree(t2, t, 2)
 
-	x = append(x, TestContent{x: "b"})
-	x = append(x, TestContent{x: "c"})
-	x = append(x, TestContent{x: "d"})
-	merkletree.AddNode(x, t)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(t)
-	fmt.Println("---------------------------------")
-
-	y = append(y, TestContent{x: "e"})
-	y = append(y, TestContent{x: "f"})
-	y = append(y, TestContent{x: "g"})
-	y = append(y, TestContent{x: "h"})
-	y = append(y, TestContent{x: "i"})
-	y = append(y, TestContent{x: "j"})
-	merkletree.AddNode(y, t)
-	if err != nil {
-		log.Fatal(err)
-	}
+	t3 := TestContent{x: "c"}
+	merkletree.AddNodeToTree(t3, t, 2)
+	t4 := TestContent{x: "d"}
+	merkletree.AddNodeToTree(t4, t, 2)
 	fmt.Println(t)
 
+	fmt.Println(t.Levels)
 }
 func exportParentsIndex(index string, length int) []string {
 	var parentsIndexString []string
