@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"merkletree/merkletree"
-	"strings"
 )
 
 //------------------------------ Testbed Area ----------------------
@@ -55,20 +54,4 @@ func main() {
 		fmt.Println(p.Index)
 	}
 
-}
-func exportParentsIndex(index string, length int) []string {
-	var parentsIndexString []string
-	if len(index) == length && !strings.Contains(index, "1") {
-		parentsIndexString = append(parentsIndexString, index)
-		return parentsIndexString
-	} else if len(index) == length && strings.Contains(index, "1") {
-		for i := length - 1; i >= 0; i-- {
-			newstr := index
-			if index[i] == '1' {
-				newstr = index[:i] + string('0')
-				parentsIndexString = append(parentsIndexString, newstr)
-			}
-		}
-	}
-	return parentsIndexString
 }
