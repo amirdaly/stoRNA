@@ -77,7 +77,7 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 
 	// treeLastNodeCount := len(t.Nodes)           // Last node Count that tree had
 	// treeNewNodesToAddCount := 1                 // count of new nodes that will be added to Tree
-	treeDepthLength := depth // depth of Tree and Number Of edge Index Bytes
+	//treeDepthLength := depth // depth of Tree and Number Of edge Index Bytes
 
 	// for N (Max Number of Merkle Tree Nodes) start to navigate whole tree
 	// At first we will check the tree depth. if depth is growing up we must update Node Index strings
@@ -89,7 +89,7 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 	// Index string
 
 	if len(t.Nodes[0].Index) < depth {
-		updateNodesIndex(t, treeDepthLength) //"00"
+		updateNodesIndex(t, depth) //"00"
 	}
 
 	// add second node
@@ -126,7 +126,7 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 			if err != nil {
 				return nil, nil, err
 			}
-			x := integerToBinaryString(i, depth)
+			x := integerToBinaryString(countLeafs(t), depth)
 			newNode := &Node{
 				Hash:   hash,
 				C:      cs,
@@ -136,6 +136,7 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 				Index:  x,
 			}
 			t.Nodes = append(t.Nodes, newNode)
+			t.Levels[depth] = append(t.Levels[depth], newNode)
 			t.Nodes[i-1].Parent = append(t.Nodes[i-1].Parent, newNode)
 			return t.Root, t.Nodes, nil
 		} else { // added as parent node
@@ -143,7 +144,7 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 			if err != nil {
 				return nil, nil, err
 			}
-			x := beforeNode.Index[:depth-1]
+			x := beforeNode.Index[:len(beforeNode.Index)-1]
 			newNode := &Node{
 				Hash:   hash,
 				C:      cs,
@@ -157,6 +158,47 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 			t.Nodes = append(t.Nodes, newNode)
 			t.Levels[len(x)] = append(t.Levels[len(x)], newNode)
 			t.Nodes[1].Parent = append(t.Nodes[1].Parent, newNode)
+			return t.Root, t.Nodes, nil
+		}
+	} else if beforeNode.leaf == false {
+		beforeNodeLevel := len(beforeNode.Index)
+		if len(t.Levels[beforeNodeLevel])%2 != 0 { // before node is a parent up to the leafs. so new node will be leaf
+			hash, err := cs.CalculateHash()
+			if err != nil {
+				return nil, nil, err
+			}
+			x := integerToBinaryString(countLeafs(t), depth)
+			newNode := &Node{
+				Hash:   hash,
+				C:      cs,
+				leaf:   true,
+				Tree:   t,
+				Number: traversingNumber,
+				Index:  x,
+				Left:   t.Nodes[i-1],
+			}
+			t.Nodes = append(t.Nodes, newNode)
+			t.Levels[len(x)] = append(t.Levels[len(x)], newNode)
+			return t.Root, t.Nodes, nil
+		} else if len(t.Levels[beforeNodeLevel])%2 == 0 { // before node is a parent and new node will upper node of them
+			hash, err := cs.CalculateHash()
+			if err != nil {
+				return nil, nil, err
+			}
+			x := beforeNode.Index[:len(beforeNode.Index)-1]
+			leftLevelEntry := t.Levels[len(beforeNode.Index)][len(beforeNode.Index)-2]
+			newNode := &Node{
+				Hash:   hash,
+				C:      cs,
+				leaf:   false,
+				Tree:   t,
+				Number: traversingNumber,
+				Index:  x,
+				Right:  t.Nodes[i-1],
+				Left:   leftLevelEntry,
+			}
+			t.Nodes = append(t.Nodes, newNode)
+			t.Levels[len(x)] = append(t.Levels[len(x)], newNode)
 			return t.Root, t.Nodes, nil
 		}
 	}
@@ -175,14 +217,15 @@ func countLeafs(t *MerkleTree) int {
 
 func updateNodesIndex(t *MerkleTree, depth int) bool {
 	T := false
-	if (depth - len(t.Nodes[0].Index)) >= 1 {
+	lastDepth := len(t.Nodes[0].Index)
+	if (depth - lastDepth) >= 1 {
 		t.Levels = nil
 		emptyNode := &Node{Tree: t}
 		level := make(map[int][]*Node)
 		level[0] = append(level[0], emptyNode)
 		for _, i := range t.Nodes {
 			tmpIndex := i.Index
-			newIndex := strings.Repeat("0", depth-len(t.Nodes[0].Index)) + tmpIndex
+			newIndex := strings.Repeat("0", depth-lastDepth) + tmpIndex
 			i.Index = newIndex
 			l := len(newIndex)
 			level[l] = append(level[l], i)
