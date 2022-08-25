@@ -23,8 +23,6 @@ type MerkleTree struct {
 	hashStrategy func() hash.Hash
 }
 
-type Levels map[int][]*Node
-
 type Node struct {
 	Tree   *MerkleTree
 	Parent []*Node
@@ -89,7 +87,7 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 	// Index string
 
 	if len(t.Nodes[0].Index) < depth {
-		updateNodesIndex(t, depth) //"00"
+		updateNodesIndex(t, depth)
 	}
 
 	// add second node
@@ -109,7 +107,7 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 		}
 		t.Nodes = append(t.Nodes, newNode)
 		t.Levels[2] = append(t.Levels[2], newNode)
-		t.Nodes[1].Parent = append(t.Nodes[1].Parent, newNode)
+		t.Nodes[1].Parent = append(t.Nodes[1].Parent, t.Nodes[0])
 		return t.Root, t.Nodes, nil
 	}
 
@@ -137,7 +135,7 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 			}
 			t.Nodes = append(t.Nodes, newNode)
 			t.Levels[depth] = append(t.Levels[depth], newNode)
-			t.Nodes[i-1].Parent = append(t.Nodes[i-1].Parent, newNode)
+			setParentsToNode(newNode, t)
 			return t.Root, t.Nodes, nil
 		} else { // added as parent node
 			hash, err := cs.CalculateHash()
@@ -179,6 +177,7 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 			}
 			t.Nodes = append(t.Nodes, newNode)
 			t.Levels[len(x)] = append(t.Levels[len(x)], newNode)
+			setParentsToNode(newNode, t)
 			return t.Root, t.Nodes, nil
 		} else if len(t.Levels[beforeNodeLevel])%2 == 0 { // before node is a parent and new node will upper node of them
 			hash, err := cs.CalculateHash()
@@ -420,21 +419,51 @@ func integerToBinaryString(num int, length int) string {
 	return strings.Repeat("0", length-len(binaryString)) + binaryString
 }
 
-func exportParentsIndex(Index string, length int) []string {
+func exportParentsIndex(index string, length int) []string {
 	var parentsIndexString []string
-	if len(Index) == length && !strings.Contains(Index, "1") {
-		parentsIndexString = append(parentsIndexString, Index)
+	if len(index) == length && !strings.Contains(index, "1") {
+		parentsIndexString = append(parentsIndexString, index)
 		return parentsIndexString
-	} else if len(Index) == length && strings.Contains(Index, "1") {
+	} else if len(index) == length && strings.Contains(index, "1") {
 		for i := length - 1; i >= 0; i-- {
-			newstr := Index
-			if Index[i] == '1' {
-				newstr = Index[:i] + string('0')
+			newstr := index
+			if index[i] == '1' {
+				newstr = index[:i] + string('0')
 				parentsIndexString = append(parentsIndexString, newstr)
 			}
 		}
 	}
 	return parentsIndexString
+}
+
+func setParentsToNode(node *Node, t *MerkleTree) bool {
+	var parentsIndexString []string
+	index := node.Index
+	if node.leaf == true { // this is leaf
+		if !strings.Contains(index, "1") { // this is first node
+			parentsIndexString = append(parentsIndexString, index)
+			node.Parent = append(node.Parent, node)
+			return true
+		} else if strings.Contains(index, "1") {
+			for i := len(index) - 1; i >= 0; i-- {
+				newstr := index
+				if index[i] == '1' {
+					newstr = index[:i] + string('0')
+					parentsIndexString = append(parentsIndexString, newstr)
+					for _, n := range t.Nodes {
+						if n.Index == newstr {
+							node.Parent = append(node.Parent, n)
+						}
+					}
+				}
+			}
+
+		}
+
+	} else { // this is not leaf
+		return false
+	}
+	return true
 }
 
 func checkParent(node *Node, length int) []*Node {
