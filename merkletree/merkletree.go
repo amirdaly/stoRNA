@@ -64,7 +64,7 @@ func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
 }
 
 func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error) {
-	// // if there is nothing to add to tree
+	// if there is nothing to add to tree
 	// if len(cs) == 0 {
 	// 	return t.Root, t.Nodes, nil
 	// }
@@ -232,34 +232,6 @@ func updateNodesIndex(t *MerkleTree, depth int) bool {
 		return T
 	}
 	return T
-}
-
-func buildIntermediate(nl []*Node, t *MerkleTree) (*Node, error) {
-	var nodes []*Node
-	for i := 0; i < len(nl); i += 2 {
-		h := t.hashStrategy()
-		var left, right int = i, i + 1
-		if i+1 == len(nl) {
-			right = i
-		}
-		chash := append(nl[left].Hash, nl[right].Hash...)
-		if _, err := h.Write(chash); err != nil {
-			return nil, err
-		}
-		n := &Node{
-			Left:  nl[left],
-			Right: nl[right],
-			Hash:  h.Sum(nil),
-			Tree:  t,
-		}
-		nodes = append(nodes, n)
-		// nl[left].Parent = n
-		// nl[right].Parent = n
-		if len(nl) == 2 {
-			return n, nil
-		}
-	}
-	return buildIntermediate(nodes, t)
 }
 
 func (n *Node) String() string {
