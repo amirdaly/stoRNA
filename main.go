@@ -48,10 +48,25 @@ func main() {
 	merkletree.AddNodeToTree(t8, t, 3)
 	t9 := TestContent{x: "i"}
 	merkletree.AddNodeToTree(t9, t, 3)
+	t10 := TestContent{x: "j"}
+	merkletree.AddNodeToTree(t10, t, 3)
+	t11 := TestContent{x: "k"}
+	merkletree.AddNodeToTree(t11, t, 3)
+	t12 := TestContent{x: "l"}
+	merkletree.AddNodeToTree(t12, t, 3)
+	t13 := TestContent{x: "m"}
+	merkletree.AddNodeToTree(t13, t, 3)
+	t14 := TestContent{x: "n"}
+	merkletree.AddNodeToTree(t14, t, 3)
+	t15 := TestContent{x: "o"}
+	merkletree.AddNodeToTree(t15, t, 4)
+	t16 := TestContent{x: "p"}
+	merkletree.AddNodeToTree(t16, t, 4)
+	t17 := TestContent{x: "q"}
+	merkletree.AddNodeToTree(t17, t, 4)
+	t18 := TestContent{x: "r"}
+	merkletree.AddNodeToTree(t18, t, 4)
 
 	fmt.Println(t)
-	for _, p := range t.Nodes[4].Parent {
-		fmt.Println(p.Index)
-	}
 
 }

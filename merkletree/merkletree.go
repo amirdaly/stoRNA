@@ -63,7 +63,7 @@ func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
 	return t, nil
 }
 
-func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error) {
+func AddNodeToTree(cs Content, t *MerkleTree) (*Node, []*Node, error) {
 	// if there is nothing to add to tree
 	// if len(cs) == 0 {
 	// 	return t.Root, t.Nodes, nil
@@ -84,12 +84,13 @@ func AddNodeToTree(cs Content, t *MerkleTree, depth int) (*Node, []*Node, error)
 	// traversing Number
 	// Index string
 
-	if len(t.Nodes[0].Index) < depth {
-		updateNodesIndex(t, depth)
-	}
+	var depth int
 
 	// add second node
 	if len(t.Nodes) == 1 {
+		depth = len(t.Nodes) + 1
+		updateNodesIndex(t, depth)
+
 		hash, err := cs.CalculateHash()
 		if err != nil {
 			return nil, nil, err
