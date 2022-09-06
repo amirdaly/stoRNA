@@ -32,6 +32,7 @@ type Node struct {
 	C      Content
 	Index  string
 	Number int
+	done   bool
 }
 
 func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
@@ -50,6 +51,7 @@ func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
 		Tree: t,
 		// Index: integerToBinaryString(0, length),
 		Index: "0",
+		done:  true,
 	})
 	t.Root = nodes[0]
 	t.Nodes = nodes
@@ -103,6 +105,7 @@ func AddNodeToTree(cs Content, t *MerkleTree) (*Node, []*Node, error) {
 			Tree:   t,
 			Number: 2,
 			Index:  x,
+			done:   true,
 		}
 		t.Nodes = append(t.Nodes, newNode)
 		t.Levels[2] = append(t.Levels[2], newNode)
@@ -110,7 +113,6 @@ func AddNodeToTree(cs Content, t *MerkleTree) (*Node, []*Node, error) {
 		return t.Root, t.Nodes, nil
 	}
 
-	// leafsCount := 1
 	// navigate Tree Nodes to add new nodes (N is all of tree nodes count)
 	i := len(t.Nodes)
 	traversingNumber := i + 1
@@ -131,6 +133,7 @@ func AddNodeToTree(cs Content, t *MerkleTree) (*Node, []*Node, error) {
 				Tree:   t,
 				Number: traversingNumber,
 				Index:  x,
+				done:   true,
 			}
 			t.Nodes = append(t.Nodes, newNode)
 			t.Levels[depth] = append(t.Levels[depth], newNode)
