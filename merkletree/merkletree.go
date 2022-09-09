@@ -33,6 +33,7 @@ type Node struct {
 	Index  string
 	Number int
 	done   bool
+	verify []byte
 }
 
 func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
