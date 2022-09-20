@@ -3,8 +3,9 @@ package main
 import (
 	"crypto/sha256"
 	"fmt"
-	"log"
 	"merkletree/merkletree"
+	"merkletree/por"
+	"os"
 )
 
 //------------------------------ Testbed Area ----------------------
@@ -25,6 +26,9 @@ func (t TestContent) Equals(other merkletree.Content) (bool, error) {
 }
 
 func main() {
+
+	/*  merkle tree run
+
 	t1 := TestContent{x: "a"}
 	t, err := merkletree.NewTreeGenesis(t1, 1)
 	if err != nil {
@@ -66,42 +70,39 @@ func main() {
 	merkletree.AddNodeToTree(t17, t, 4)
 	t18 := TestContent{x: "r"}
 	merkletree.AddNodeToTree(t18, t, 4)
-
 	fmt.Println(t)
+	*/
 
-	/*  POR example run
+	/*  POR example run  */
 
-		func main() {
-		fmt.Printf("Generating RSA keys...\n")
-		spk, ssk := Keygen()
-		fmt.Printf("Generated!\n")
+	fmt.Printf("Generating RSA keys...\n")
+	spk, ssk := por.Keygen()
+	fmt.Printf("Generated!\n")
 
-		fmt.Printf("Signing file...\n")
-		file, err := os.Open("./example.txt")
-		if err != nil {
-			panic(err)
-		}
-		tau, authenticators := St(ssk, file)
-		fmt.Printf("Signed!\n")
+	fmt.Printf("Signing file...\n")
+	file, err := os.Open("./example.txt")
+	if err != nil {
+		panic(err)
+	}
+	tau, authenticators := por.St(ssk, file)
+	fmt.Printf("Signed!\n")
 
-		fmt.Printf("Generating challenge...\n")
-		q := Verify_one(tau, spk)
-		fmt.Printf("Generated!\n")
+	fmt.Printf("Generating challenge...\n")
+	q := por.Verify_one(tau, spk)
+	fmt.Printf("Generated!\n")
 
-		fmt.Printf("Issuing proof...\n")
-		mu, sigma := Prove(q, authenticators, spk, file)
-		fmt.Printf("Issued!\n")
+	fmt.Printf("Issuing proof...\n")
+	mu, sigma := por.Prove(q, authenticators, spk, file)
+	fmt.Printf("Issued!\n")
 
-		fmt.Printf("Verifying proof...\n")
-		yes := Verify_two(tau, q, mu, sigma, spk)
-		fmt.Printf("Result: %t!\n", yes)
-		if yes {
-			os.Exit(0)
-		} else {
-			os.Exit(1)
-		}
+	fmt.Printf("Verifying proof...\n")
+	yes := por.Verify_two(tau, q, mu, sigma, spk)
+	fmt.Printf("Result: %t!\n", yes)
+	if yes {
+		os.Exit(0)
+	} else {
+		os.Exit(1)
 	}
 
-
-	*/
+	/* */
 }
