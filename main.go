@@ -67,7 +67,7 @@ func SortFileSizeAscend(files []os.FileInfo) {
 }
 
 func sha256RunTest() {
-	files, err := ioutil.ReadDir("/Users/amir/testFiles/kb")
+	files, err := ioutil.ReadDir("/Users/amir/testFiles")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -75,7 +75,7 @@ func sha256RunTest() {
 	count := 1
 	for _, v := range files {
 		fmt.Println(count)
-		path := "/Users/amir/testFiles/kb/" + v.Name()
+		path := "/Users/amir/testFiles/" + v.Name()
 		inf, err := os.Stat(path)
 		if err != nil {
 			fmt.Println(err)
