@@ -1,0 +1,96 @@
+1
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 38.458µs
+/Users/amir/testFiles/01-1KB-file
+File size: 1 KB
+SHA256 Hash: ef8797ef48eb1b859f0ba01754246eadc2b70d267edda4797dc1b179d2e5a8c6
+------------------------------------------
+2
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 80.5µs
+/Users/amir/testFiles/02-32KB-file
+File size: 32 KB
+SHA256 Hash: 1773a576c0c7e9e0dc4faa6b53205a5e53c3054e629021a0f8addc26a326907f
+------------------------------------------
+3
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 137.042µs
+/Users/amir/testFiles/03-64KB-file
+File size: 64 KB
+SHA256 Hash: acf55831392765d889a072b219da86a7a7701aebad2a8bac91b0300fffcc01bd
+------------------------------------------
+4
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 246.042µs
+/Users/amir/testFiles/04-128KB-file
+File size: 128 KB
+SHA256 Hash: 0a32fb072841444fbd317a486f8f324352410c3c17f8d26fa2f3d0ddd49ca595
+------------------------------------------
+5
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 366.709µs
+/Users/amir/testFiles/05-192KB-file
+File size: 192 KB
+SHA256 Hash: 0ed5fca887f3b4c9cffa2c4312303cb6b4545792e8e4fde46aeb3876fb0fe5ec
+------------------------------------------
+6
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 466.208µs
+/Users/amir/testFiles/06-256KB-file
+File size: 256 KB
+SHA256 Hash: a42592f9db8708971721315e92a5d56ce51b755c35c22d84432cc3ce8318584e
+------------------------------------------
+7
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 928µs
+/Users/amir/testFiles/07-512KB-file
+File size: 512 KB
+SHA256 Hash: 707c4b14f365cbee76112dcca8bc8b47a0a5e50f0ae12affa733314b3903273c
+------------------------------------------
+8
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 1.681708ms
+/Users/amir/testFiles/08-1MB-file
+File size: 1024 KB
+SHA256 Hash: 69de929b7c5c0d289251b7b8d251f337626c02d93b9dc9cab19075a282daadfb
+------------------------------------------
+9
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 5.626166ms
+/Users/amir/testFiles/09-4MB-file
+File size: 4096 KB
+SHA256 Hash: dab0d18692cd43bee161023af6a1ed10338f80cfa1b0e3e7720d775c21f6d908
+------------------------------------------
+10
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 9.297833ms
+/Users/amir/testFiles/10-8MB-file
+File size: 8192 KB
+SHA256 Hash: 8b89b572a055ccbb610cd6583263e805b13f753759d6901bf4d335298b4b2d6e
+------------------------------------------
+11
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 14.951208ms
+/Users/amir/testFiles/11-16MB-file
+File size: 16384 KB
+SHA256 Hash: 72a5b55ac3d7a4ea50f99bcded3ff394f5c622d02c74d76124590b74f9b47b90
+------------------------------------------
+12
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 23.209416ms
+/Users/amir/testFiles/12-32MB-file
+File size: 32768 KB
+SHA256 Hash: 564ea454661f1b8157031a552b22f9ae5a16ed75908da6b4357ff4137c0d4dd8
+------------------------------------------
+13
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 48.037083ms
+/Users/amir/testFiles/13-64MB-file
+File size: 65536 KB
+SHA256 Hash: ac36ae691f862228746854ccbf1d6ad06b32f8df762ff901cf628d0f7babd15f
+------------------------------------------
+14
+2022/10/11 12:17:48 SHA256 Calculation Runtime: 94.871167ms
+/Users/amir/testFiles/14-128MB-file
+File size: 131072 KB
+SHA256 Hash: 7c6fc0040d657dc96b98110c6efecac9402165e89694c76b813a9c96e96c8bcd
+------------------------------------------
+15
+2022/10/11 12:17:49 SHA256 Calculation Runtime: 164.199208ms
+/Users/amir/testFiles/15-192MB-file
+File size: 196608 KB
+SHA256 Hash: 93700c8cbc1e215656dd8f94f0bf5bf560c532b91af5c837dda5782ceeb1f0e6
+------------------------------------------
+16
+2022/10/11 12:17:49 SHA256 Calculation Runtime: 236.391583ms
+/Users/amir/testFiles/16-256MB-file
+File size: 262144 KB
+SHA256 Hash: b09620c7e0315bd82b38fd254451b980ce7770322887cf42b9991f66fb1448e1
+------------------------------------------

@@ -46,11 +46,10 @@ func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
 		return nil, err
 	}
 	nodes = append(nodes, &Node{
-		Hash: hash,
-		C:    cs,
-		leaf: true,
-		Tree: t,
-		// Index: integerToBinaryString(0, length),
+		Hash:  hash,
+		C:     cs,
+		leaf:  true,
+		Tree:  t,
 		Index: "0",
 		done:  true,
 	})
@@ -93,7 +92,6 @@ func AddNodeToTree(cs Content, t *MerkleTree) (*Node, []*Node, error) {
 	if len(t.Nodes) == 1 {
 		depth = len(t.Nodes) + 1
 		updateNodesIndex(t, depth)
-
 		hash, err := cs.CalculateHash()
 		if err != nil {
 			return nil, nil, err

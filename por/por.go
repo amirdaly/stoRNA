@@ -8,9 +8,11 @@ import (
 	"crypto/sha512"
 	"encoding/binary"
 	"encoding/gob"
+	"log"
 	"math"
 	"math/big"
 	"os"
+	"time"
 )
 
 func Keygen() (*rsa.PublicKey, *rsa.PrivateKey) {
@@ -179,6 +181,7 @@ func Verify_one(tau Tau, spk *rsa.PublicKey) []QElement {
 }
 
 func Prove(q []QElement, authenticators []*big.Int, spk *rsa.PublicKey, file *os.File) (_Mu []*big.Int, _Sigma *big.Int) {
+
 	matrix, s, _ := Split(file)
 
 	mu := make([]*big.Int, s)
@@ -201,6 +204,7 @@ func Prove(q []QElement, authenticators []*big.Int, spk *rsa.PublicKey, file *os
 }
 
 func Verify_two(tau Tau, q []QElement, mus []*big.Int, sigma *big.Int, spk *rsa.PublicKey) bool {
+	defer duration(track("Prove Runtime"))
 	// Todo: check that the values are in range
 	first := new(big.Int).SetInt64(1)
 	for _, qelem := range q {
@@ -218,4 +222,13 @@ func Verify_two(tau Tau, q []QElement, mus []*big.Int, sigma *big.Int, spk *rsa.
 	second.Mod(second, spk.N)
 
 	return new(big.Int).Mod(new(big.Int).Mul(first, second), spk.N).Cmp(new(big.Int).Exp(sigma, new(big.Int).SetInt64(int64(spk.E)), spk.N)) == 0
+}
+
+func track(msg string) (string, time.Time) {
+	return msg, time.Now()
+}
+
+func duration(msg string, start time.Time) {
+	log.Printf("%v: %v\n", msg, time.Since(start))
+
 }

@@ -1,0 +1,214 @@
+1
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/01-1KB-file
+File size: 1 KB
+2022/10/11 12:30:48 Prove Runtime: 133.125µs
+Result: true!
+------------------------------------------
+2
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/02-32KB-file
+File size: 32 KB
+2022/10/11 12:30:52 Prove Runtime: 149.292µs
+Result: true!
+------------------------------------------
+3
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/03-64KB-file
+File size: 64 KB
+2022/10/11 12:31:01 Prove Runtime: 153.667µs
+Result: true!
+------------------------------------------
+4
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/04-128KB-file
+File size: 128 KB
+2022/10/11 12:31:18 Prove Runtime: 162.208µs
+Result: true!
+------------------------------------------
+5
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/05-192KB-file
+File size: 192 KB
+2022/10/11 12:31:44 Prove Runtime: 143.75µs
+Result: true!
+------------------------------------------
+6
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/06-256KB-file
+File size: 256 KB
+2022/10/11 12:32:18 Prove Runtime: 161.5µs
+Result: true!
+------------------------------------------
+7
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/07-512KB-file
+File size: 512 KB
+2022/10/11 12:33:27 Prove Runtime: 173.416µs
+Result: true!
+------------------------------------------
+8
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/08-1MB-file
+File size: 1024 KB
+2022/10/11 12:35:53 Prove Runtime: 149.042µs
+Result: true!
+------------------------------------------
+9
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/09-4MB-file
+File size: 4096 KB
+2022/10/11 12:45:01 Prove Runtime: 170.458µs
+Result: true!
+------------------------------------------
+10
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/10-8MB-file
+File size: 8192 KB
+2022/10/11 13:13:22 Prove Runtime: 163.958µs
+Result: true!
+------------------------------------------
+11
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/11-16MB-file
+File size: 16384 KB
+2022/10/11 16:16:31 Prove Runtime: 160.333µs
+Result: true!
+------------------------------------------
+12
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/12-32MB-file
+File size: 32768 KB
+2022/10/11 18:35:12 Prove Runtime: 168.119µs
+Result: true!
+------------------------------------------
+13
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/13-64MB-file
+File size: 65536 KB
+2022/10/11 23:12:08 Prove Runtime: 169.722.333µs
+Result: true!
+------------------------------------------
+14
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/14-128MB-file
+File size: 131072 KB
+2022/10/12 03:05:44 Prove Runtime: 157.220µs
+Result: true!
+------------------------------------------
+15
+Generating RSA keys...
+Generated!
+Signing file...
+Signed!
+Generating challenge...
+Generated!
+Issuing proof for file ..
+Issued!
+Verifying proof of file: /Users/amir/testFiles/15-192MB-file
+File size: 196608 KB
+2022/10/12 08:12:18 Prove Runtime: 150.453µs
+Result: true!
+------------------------------------------
+16
+Generating RSA keys...
+Generated!
+Signing file...
