@@ -67,7 +67,7 @@ func SortFileSizeAscend(files []os.FileInfo) {
 }
 
 func sha256RunTest() {
-	files, err := ioutil.ReadDir("/Users/amir/testFiles")
+	files, err := ioutil.ReadDir("/Users/amir/testFiles/kb")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -75,7 +75,7 @@ func sha256RunTest() {
 	count := 1
 	for _, v := range files {
 		fmt.Println(count)
-		path := "/Users/amir/testFiles/" + v.Name()
+		path := "/Users/amir/testFiles/kb/" + v.Name()
 		inf, err := os.Stat(path)
 		if err != nil {
 			fmt.Println(err)
@@ -88,7 +88,7 @@ func sha256RunTest() {
 			panic(err)
 		}
 		fmt.Println(path)
-		fmt.Printf("File size: %v KB\n", fs/1024)
+		fmt.Printf("File size: %v B\n", fs)
 		fmt.Printf("SHA256 Hash: %x\n", hash)
 		fmt.Println("------------------------------------------")
 		count++
@@ -151,13 +151,14 @@ func porTestRun() {
 }
 
 func main() {
+	sha256RunTest()
 	// merkle tree run
-	t1 := TestContent{x: "a"}
-	t, err := merkletree.NewTreeGenesis(t1, 1)
-	if err != nil {
-		log.Fatal(err)
-	}
-	//-----------------------------------
+	// t1 := TestContent{x: "a"}
+	// t, err := merkletree.NewTreeGenesis(t1, 1)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// //-----------------------------------
 	// t2 := TestContent{x: "b"}
 	// merkletree.AddNodeToTree(t2, t)
 	// t3 := TestContent{x: "c"}
@@ -193,5 +194,5 @@ func main() {
 	// merkletree.AddNodeToTree(t17, t)
 	// t18 := TestContent{x: "r"}
 	// merkletree.AddNodeToTree(t18, t)
-	fmt.Println(t)
+	// fmt.Println(t)
 }

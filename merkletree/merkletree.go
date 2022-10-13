@@ -60,8 +60,8 @@ func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
 	level := make(map[int][]*Node)
 	level[0] = append(level[0], emptyNode)
 	level[1] = append(level[1], t.Nodes[0])
-	t.Levels = level
 	t.Nodes[0].Number = 1 //add navigation Number 1 to first node of tree
+	t.Levels = level
 	return t, nil
 }
 
@@ -109,6 +109,17 @@ func AddNodeToTree(cs Content, t *MerkleTree) (*Node, []*Node, error) {
 		t.Nodes = append(t.Nodes, newNode)
 		t.Levels[2] = append(t.Levels[2], newNode)
 		t.Nodes[1].Parent = append(t.Nodes[1].Parent, t.Nodes[0])
+
+		for p, i := range t.Levels {
+			fmt.Println(p)
+			for t, j := range i {
+
+				fmt.Println(t, j)
+			}
+
+			fmt.Println("---------")
+		}
+
 		return t.Root, t.Nodes, nil
 	}
 
