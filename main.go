@@ -30,6 +30,9 @@ func (t TestContent) CalculateHash() ([]byte, error) {
 func (t TestContent) Equals(other merkletree.Content) (bool, error) {
 	return t.x == other.(TestContent).x, nil
 }
+func (t TestContent) GetData() string {
+	return t.x
+}
 
 func CalculateHash(filepath string) ([]byte, error) {
 	file, err := os.Open(filepath)
@@ -151,48 +154,69 @@ func porTestRun() {
 }
 
 func main() {
-	sha256RunTest()
+	// sha256RunTest()
+
 	// merkle tree run
-	// t1 := TestContent{x: "a"}
-	// t, err := merkletree.NewTreeGenesis(t1, 1)
-	// if err != nil {
-	// 	log.Fatal(err)
+	t1 := TestContent{x: "a"}
+	t, err := merkletree.NewTreeGenesis(t1, 1)
+	if err != nil {
+		log.Fatal(err)
+	}
+	t2 := TestContent{x: "b"}
+	merkletree.AddNodeToTree(t2, t)
+	t3 := TestContent{x: "c"}
+	merkletree.AddNodeToTree(t3, t)
+	t4 := TestContent{x: "d"}
+	merkletree.AddNodeToTree(t4, t)
+	t5 := TestContent{x: "e"}
+	merkletree.AddNodeToTree(t5, t)
+	t6 := TestContent{x: "f"}
+	merkletree.AddNodeToTree(t6, t)
+	t7 := TestContent{x: "g"}
+	merkletree.AddNodeToTree(t7, t)
+	t8 := TestContent{x: "h"}
+	merkletree.AddNodeToTree(t8, t)
+	t9 := TestContent{x: "i"}
+	merkletree.AddNodeToTree(t9, t)
+	t10 := TestContent{x: "j"}
+	merkletree.AddNodeToTree(t10, t)
+	t11 := TestContent{x: "k"}
+	merkletree.AddNodeToTree(t11, t)
+	t12 := TestContent{x: "l"}
+	merkletree.AddNodeToTree(t12, t)
+	t13 := TestContent{x: "m"}
+	merkletree.AddNodeToTree(t13, t)
+	t14 := TestContent{x: "n"}
+	merkletree.AddNodeToTree(t14, t)
+	t15 := TestContent{x: "o"}
+	merkletree.AddNodeToTree(t15, t)
+	t16 := TestContent{x: "p"}
+	merkletree.AddNodeToTree(t16, t)
+	t17 := TestContent{x: "q"}
+	merkletree.AddNodeToTree(t17, t)
+	t18 := TestContent{x: "r"}
+	merkletree.AddNodeToTree(t18, t)
+
+	fmt.Println(t)
+	// for i := 0; i < len(t.Levels); i++ {
+	// 	fmt.Printf("Level %d counted nodes are: %d\n", i, len(t.Levels[i]))
+	// 	for t, j := range t.Levels[i] {
+
+	// 		fmt.Println(t, j)
+	// 	}
+	// 	fmt.Println("---------")
 	// }
-	// //-----------------------------------
-	// t2 := TestContent{x: "b"}
-	// merkletree.AddNodeToTree(t2, t)
-	// t3 := TestContent{x: "c"}
-	// merkletree.AddNodeToTree(t3, t)
-	// t4 := TestContent{x: "d"}
-	// merkletree.AddNodeToTree(t4, t)
-	// t5 := TestContent{x: "e"}
-	// merkletree.AddNodeToTree(t5, t)
-	// t6 := TestContent{x: "f"}
-	// merkletree.AddNodeToTree(t6, t)
-	// //-----------------------------------
-	// t7 := TestContent{x: "g"}
-	// merkletree.AddNodeToTree(t7, t)
-	// t8 := TestContent{x: "h"}
-	// merkletree.AddNodeToTree(t8, t)
-	// t9 := TestContent{x: "i"}
-	// merkletree.AddNodeToTree(t9, t)
-	// t10 := TestContent{x: "j"}
-	// merkletree.AddNodeToTree(t10, t)
-	// t11 := TestContent{x: "k"}
-	// merkletree.AddNodeToTree(t11, t)
-	// t12 := TestContent{x: "l"}
-	// merkletree.AddNodeToTree(t12, t)
-	// t13 := TestContent{x: "m"}
-	// merkletree.AddNodeToTree(t13, t)
-	// t14 := TestContent{x: "n"}
-	// merkletree.AddNodeToTree(t14, t)
-	// t15 := TestContent{x: "o"}
-	// merkletree.AddNodeToTree(t15, t)
-	// t16 := TestContent{x: "p"}
-	// merkletree.AddNodeToTree(t16, t)
-	// t17 := TestContent{x: "q"}
-	// merkletree.AddNodeToTree(t17, t)
-	// t18 := TestContent{x: "r"}
-	// merkletree.AddNodeToTree(t18, t)
-	// fmt.Println(t)
+	// for _, inode := range t.Nodes {
+	// 	if inode.Parents != nil {
+	// 		for _, node := range inode.Parents {
+	// 			fmt.Printf("Parent of [%s: %s] is %s\n", inode.Data, inode.Index, node.Index)
+	// 		}
+	// 		fmt.Println("--------------")
+	// 	} else {
+	// 		fmt.Printf("Left Node of [%s: %s] is %s\n", inode.Data, inode.Index, inode.Left.Index)
+	// 		fmt.Printf("Right Node of [%s: %s] is %s\n", inode.Data, inode.Index, inode.Right.Index)
+	// 		fmt.Println("--------------")
+	// 	}
+	// }
+
 }
