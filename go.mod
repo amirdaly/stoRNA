@@ -1,3 +1,3 @@
-module PoSW_DAG
+module CommitDAG
 
 go 1.18

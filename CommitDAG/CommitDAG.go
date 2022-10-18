@@ -1,4 +1,4 @@
-package PoSW_DAG
+package CommitDAG
 
 import (
 	"crypto/sha256"
@@ -15,7 +15,7 @@ type Content interface {
 	GetData() string
 }
 
-type PoSW_DAG struct {
+type CommitDAG struct {
 	Root         *Node
 	dagRoot      []byte
 	Nodes        []*Node
@@ -25,7 +25,7 @@ type PoSW_DAG struct {
 }
 
 type Node struct {
-	DAG     *PoSW_DAG
+	DAG     *CommitDAG
 	Parents []*Node
 	Left    *Node
 	Right   *Node
@@ -39,11 +39,11 @@ type Node struct {
 	verify  []byte
 }
 
-func NewDAGGenesis(cs Content, length int) (*PoSW_DAG, error) {
-	var defaultHashStrategy = sha256.New              // Default hash strategy for calculation
-	t := &PoSW_DAG{hashStrategy: defaultHashStrategy} // New DAG call by refrence
-	var nodes []*Node                                 // Array for nodes of DAG
-	hash, err := cs.CalculateHash()                   // Calculate hash
+func NewDAGGenesis(cs Content, length int) (*CommitDAG, error) {
+	var defaultHashStrategy = sha256.New               // Default hash strategy for calculation
+	t := &CommitDAG{hashStrategy: defaultHashStrategy} // New DAG call by refrence
+	var nodes []*Node                                  // Array for nodes of DAG
+	hash, err := cs.CalculateHash()                    // Calculate hash
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +72,7 @@ func NewDAGGenesis(cs Content, length int) (*PoSW_DAG, error) {
 	return t, nil
 }
 
-func AddNewLeafToDAG(cs Content, t *PoSW_DAG, depth int) (*Node, error) {
+func AddNewLeafToDAG(cs Content, t *CommitDAG, depth int) (*Node, error) {
 	updateNodesIndex(t, depth)                        // generate or update binary indexes of nodes
 	leafsCount := countLeafs(t)                       // count leafs of the DAG
 	traversingNumber := len(t.Nodes) + 1              // travering number of node is count of nodes + 1
@@ -101,7 +101,7 @@ func AddNewLeafToDAG(cs Content, t *PoSW_DAG, depth int) (*Node, error) {
 	return t.Root, nil
 }
 
-func AddIntermediateNode(cs Content, t *PoSW_DAG, depth int, index string) (*Node, error) {
+func AddIntermediateNode(cs Content, t *CommitDAG, depth int, index string) (*Node, error) {
 	traversingNumber := len(t.Nodes) + 1 // travering number of node is count of nodes + 1
 	hash, err := cs.CalculateHash()
 	if err != nil {
@@ -126,14 +126,15 @@ func AddIntermediateNode(cs Content, t *PoSW_DAG, depth int, index string) (*Nod
 	return t.Root, nil
 }
 
-func AddNodeToDAG(cs Content, t *PoSW_DAG) (*Node, error) {
+// This Function totaly add new Node to CommitDAG. It means that Proofs of Sequential Work and Binary MerkleTree
+// There are 4 if check for adding a new Node to DAG
+// 1: If lastNode of DAG is leaf and leafs count is odd. So we must add another leaf to DAG.
+// 2: If lastNode of DAG is leaf and leafs count is even. So we must add an upper parent to last 2 leafs. Its an intermediate node to DAG.
+// 3: If lastNode of DAG is an intermediate node and count of nodes in that level is even. So we must add an other intermediate Node to DAG.
+// 4: If lastNode of DAG is an intermediate node and count of nodes in that level is odd. So we must add new leaf to DAG.
+func AddNodeToDAG(cs Content, t *CommitDAG) (*Node, error) {
 	depth := int(math.Log2(float64(len(t.Nodes) + 2))) // calculate depth of DAG bu log(n) + 2
 	lastNode := t.Nodes[len(t.Nodes)-1]
-	// There are 4 if check for adding a new Node to DAG
-	// 1: If lastNode of DAG is leaf and leafs count is odd. So we must add another leaf to DAG.
-	// 2: If lastNode of DAG is leaf and leafs count is even. So we must add an upper parent to last 2 leafs. Its an intermediate node to DAG.
-	// 3: If lastNode of DAG is an intermediate node and count of nodes in that level is even. So we must add an other intermediate Node to DAG.
-	// 4: If lastNode of DAG is an intermediate node and count of nodes in that level is odd. So we must add new leaf to DAG.
 	if lastNode.leaf == true {
 		if countLeafs(t)%2 != 0 {
 			AddNewLeafToDAG(cs, t, depth)
@@ -165,7 +166,7 @@ func AddNodeToDAG(cs Content, t *PoSW_DAG) (*Node, error) {
 	return t.Root, nil
 }
 
-func countLeafs(t *PoSW_DAG) int {
+func countLeafs(t *CommitDAG) int {
 	count := 0
 	for _, n := range t.Nodes {
 		if n.leaf == true {
@@ -175,7 +176,7 @@ func countLeafs(t *PoSW_DAG) int {
 	return count
 }
 
-func updateNodesIndex(t *PoSW_DAG, depth int) bool {
+func updateNodesIndex(t *CommitDAG, depth int) bool {
 	T := false
 	lastDepth := len(t.Nodes[0].Index)
 	if (depth - lastDepth) >= 1 {
@@ -197,7 +198,7 @@ func updateNodesIndex(t *PoSW_DAG, depth int) bool {
 	return T
 }
 
-func updateLevelsEntry(t *PoSW_DAG) bool {
+func updateLevelsEntry(t *CommitDAG) bool {
 	T := false
 	t.Levels = nil
 	emptyNode := &Node{DAG: t}
@@ -221,7 +222,7 @@ func integerToBinaryString(num int, length int) string {
 	return strings.Repeat("0", length-len(binaryString)) + binaryString
 }
 
-func setParentsToNode(node *Node, t *PoSW_DAG) bool {
+func setParentsToNode(node *Node, t *CommitDAG) bool {
 	var parentsIndexString []string
 	index := node.Index
 	if node.leaf == true { // this is leaf
@@ -261,7 +262,7 @@ func setParentsToNode(node *Node, t *PoSW_DAG) bool {
 	return true
 }
 
-func IsNodeInDAG(Index string, t *PoSW_DAG) *Node {
+func IsNodeInDAG(Index string, t *CommitDAG) *Node {
 	for _, i := range t.Nodes {
 		if i.Index == Index {
 			return i
@@ -274,7 +275,7 @@ func (n *Node) String() string {
 	return fmt.Sprintf("Number: %d | Index: %s | leaf: %t | hash: %x data: %s", n.Number, n.Index, n.leaf, n.Hash, n.Data)
 }
 
-func (m *PoSW_DAG) String() string {
+func (m *CommitDAG) String() string {
 	s := ""
 	for _, l := range m.Nodes {
 		s += fmt.Sprint(l)

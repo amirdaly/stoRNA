@@ -1,8 +1,8 @@
 package main
 
 import (
-	"PoSW_DAG/PoSW_DAG"
-	"PoSW_DAG/por"
+	"CommitDAG/CommitDAG"
+	"CommitDAG/por"
 	"crypto/sha256"
 	"fmt"
 	"io"
@@ -27,7 +27,7 @@ func (t TestContent) CalculateHash() ([]byte, error) {
 	}
 	return h.Sum(nil), nil
 }
-func (t TestContent) Equals(other PoSW_DAG.Content) (bool, error) {
+func (t TestContent) Equals(other CommitDAG.Content) (bool, error) {
 	return t.x == other.(TestContent).x, nil
 }
 func (t TestContent) GetData() string {
@@ -158,44 +158,44 @@ func main() {
 
 	// merkle tree run
 	t1 := TestContent{x: "a"}
-	t, err := PoSW_DAG.NewDAGGenesis(t1, 1)
+	t, err := CommitDAG.NewDAGGenesis(t1, 1)
 	if err != nil {
 		log.Fatal(err)
 	}
 	t2 := TestContent{x: "b"}
-	PoSW_DAG.AddNodeToDAG(t2, t)
+	CommitDAG.AddNodeToDAG(t2, t)
 	t3 := TestContent{x: "c"}
-	PoSW_DAG.AddNodeToDAG(t3, t)
+	CommitDAG.AddNodeToDAG(t3, t)
 	t4 := TestContent{x: "d"}
-	PoSW_DAG.AddNodeToDAG(t4, t)
+	CommitDAG.AddNodeToDAG(t4, t)
 	t5 := TestContent{x: "e"}
-	PoSW_DAG.AddNodeToDAG(t5, t)
+	CommitDAG.AddNodeToDAG(t5, t)
 	t6 := TestContent{x: "f"}
-	PoSW_DAG.AddNodeToDAG(t6, t)
+	CommitDAG.AddNodeToDAG(t6, t)
 	t7 := TestContent{x: "g"}
-	PoSW_DAG.AddNodeToDAG(t7, t)
+	CommitDAG.AddNodeToDAG(t7, t)
 	t8 := TestContent{x: "h"}
-	PoSW_DAG.AddNodeToDAG(t8, t)
+	CommitDAG.AddNodeToDAG(t8, t)
 	t9 := TestContent{x: "i"}
-	PoSW_DAG.AddNodeToDAG(t9, t)
+	CommitDAG.AddNodeToDAG(t9, t)
 	t10 := TestContent{x: "j"}
-	PoSW_DAG.AddNodeToDAG(t10, t)
+	CommitDAG.AddNodeToDAG(t10, t)
 	t11 := TestContent{x: "k"}
-	PoSW_DAG.AddNodeToDAG(t11, t)
+	CommitDAG.AddNodeToDAG(t11, t)
 	t12 := TestContent{x: "l"}
-	PoSW_DAG.AddNodeToDAG(t12, t)
+	CommitDAG.AddNodeToDAG(t12, t)
 	t13 := TestContent{x: "m"}
-	PoSW_DAG.AddNodeToDAG(t13, t)
+	CommitDAG.AddNodeToDAG(t13, t)
 	t14 := TestContent{x: "n"}
-	PoSW_DAG.AddNodeToDAG(t14, t)
+	CommitDAG.AddNodeToDAG(t14, t)
 	t15 := TestContent{x: "o"}
-	PoSW_DAG.AddNodeToDAG(t15, t)
+	CommitDAG.AddNodeToDAG(t15, t)
 	t16 := TestContent{x: "p"}
-	PoSW_DAG.AddNodeToDAG(t16, t)
+	CommitDAG.AddNodeToDAG(t16, t)
 	t17 := TestContent{x: "q"}
-	PoSW_DAG.AddNodeToDAG(t17, t)
+	CommitDAG.AddNodeToDAG(t17, t)
 	t18 := TestContent{x: "r"}
-	PoSW_DAG.AddNodeToDAG(t18, t)
+	CommitDAG.AddNodeToDAG(t18, t)
 
 	fmt.Println(t)
 	// for i := 0; i < len(t.Levels); i++ {
