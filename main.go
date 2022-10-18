@@ -194,4 +194,5 @@ func main() {
 	t18 := TestContent{x: "r"}
 	CommitDAG.AddNodeToDAG(t18, t)
 
+	fmt.Println(t)
 }

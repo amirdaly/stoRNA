@@ -6,7 +6,6 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
-	"fmt"
 	"log"
 	"math/big"
 	"math/rand"
@@ -31,17 +30,6 @@ func (t TestContent) Equals(other CommitDAG.Content) (bool, error) {
 }
 func (t TestContent) GetData() string {
 	return t.x
-}
-
-func stoRNA_Genesis(fileName string) (*rsa.PublicKey, *rsa.PrivateKey) {
-	file, err := os.Open(path)
-	if err != nil {
-		return
-	}
-	defer file.Close()
-	fmt.Printf("Generating RSA keys...\n")
-	spk, ssk := por.Keygen()
-	return &pk, sk
 }
 
 func Store(fileName string) (*rsa.PublicKey, *os.File, Tau, []*big.Int, *rsa.PublicKey) {
@@ -74,6 +62,7 @@ func Prove(file *os.File, tag tau, rs *big.Int, depositTime int, auditFrequency 
 		var t CommitDAG.CommitDAG
 		var c []int
 		c := make(map[int][]byte)
+		h := make(map[int][]byte)
 		if i == 1 { // first node to genesis DAG
 			t1 := TestContent{x: st}
 			t, err := CommitDAG.NewDAGGenesis(t1)
@@ -89,6 +78,7 @@ func Prove(file *os.File, tag tau, rs *big.Int, depositTime int, auditFrequency 
 			}
 			c[i] = hash
 		}
+		h[i] = st.byte()
 
 	}
 }
