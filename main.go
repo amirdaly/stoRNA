@@ -69,8 +69,8 @@ func SortFileSizeAscend(files []os.FileInfo) {
 	})
 }
 
-func sha256RunTest() {
-	files, err := ioutil.ReadDir("/Users/amir/testFiles")
+func sha256RunTest(directoryPath string) {
+	files, err := ioutil.ReadDir(directoryPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -78,7 +78,7 @@ func sha256RunTest() {
 	count := 1
 	for _, v := range files {
 		fmt.Println(count)
-		path := "/Users/amir/testFiles/" + v.Name()
+		path := directoryPath + v.Name()
 		inf, err := os.Stat(path)
 		if err != nil {
 			fmt.Println(err)
@@ -93,15 +93,14 @@ func sha256RunTest() {
 		fmt.Println(path)
 		fmt.Printf("File size: %v B\n", fs)
 		fmt.Printf("SHA256 Hash: %x\n", hash)
-		fmt.Println("------------------------------------------")
 		count++
 	}
 }
 
-func porTestRun() {
+func porTestRun(directoryPath string) {
 	/*  POR example run  */
 
-	files, err := ioutil.ReadDir("/Users/amir/testFiles")
+	files, err := ioutil.ReadDir(directoryPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -109,7 +108,7 @@ func porTestRun() {
 	count := 1
 	for _, v := range files {
 		fmt.Println(count)
-		path := "/Users/amir/testFiles/" + v.Name()
+		path := directoryPath + v.Name()
 		inf, err := os.Stat(path)
 		if err != nil {
 			fmt.Println(err)
@@ -143,7 +142,6 @@ func porTestRun() {
 		fmt.Printf("Result: %t!\n", yes)
 		if yes {
 			file.Close()
-			fmt.Println("------------------------------------------")
 			count++
 			continue
 		} else {
@@ -156,9 +154,8 @@ func porTestRun() {
 func main() {
 	// sha256RunTest()
 
-	// merkle tree run
 	t1 := TestContent{x: "a"}
-	t, err := CommitDAG.NewDAGGenesis(t1, 1)
+	t, err := CommitDAG.NewDAGGenesis(t1)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -196,27 +193,5 @@ func main() {
 	CommitDAG.AddNodeToDAG(t17, t)
 	t18 := TestContent{x: "r"}
 	CommitDAG.AddNodeToDAG(t18, t)
-
-	fmt.Println(t)
-	// for i := 0; i < len(t.Levels); i++ {
-	// 	fmt.Printf("Level %d counted nodes are: %d\n", i, len(t.Levels[i]))
-	// 	for t, j := range t.Levels[i] {
-
-	// 		fmt.Println(t, j)
-	// 	}
-	// 	fmt.Println("---------")
-	// }
-	// for _, inode := range t.Nodes {
-	// 	if inode.Parents != nil {
-	// 		for _, node := range inode.Parents {
-	// 			fmt.Printf("Parent of [%s: %s] is %s\n", inode.Data, inode.Index, node.Index)
-	// 		}
-	// 		fmt.Println("--------------")
-	// 	} else {
-	// 		fmt.Printf("Left Node of [%s: %s] is %s\n", inode.Data, inode.Index, inode.Left.Index)
-	// 		fmt.Printf("Right Node of [%s: %s] is %s\n", inode.Data, inode.Index, inode.Right.Index)
-	// 		fmt.Println("--------------")
-	// 	}
-	// }
 
 }

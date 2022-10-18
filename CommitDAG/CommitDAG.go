@@ -40,7 +40,7 @@ type Node struct {
 }
 
 // This function Create a new DAG pointer and push first node as initialized node in it.
-func NewDAGGenesis(cs Content, length int) (*CommitDAG, error) {
+func NewDAGGenesis(cs Content) (*CommitDAG, error) {
 	var defaultHashStrategy = sha256.New               // Default hash strategy for calculation
 	t := &CommitDAG{hashStrategy: defaultHashStrategy} // New DAG call by refrence
 	var nodes []*Node                                  // Array for nodes of DAG
@@ -139,7 +139,7 @@ func AddIntermediateNode(cs Content, t *CommitDAG, depth int, index string) (*No
 // So we must add an other intermediate Node to DAG.
 // 4: If lastNode of DAG is an intermediate node and count of nodes in that level is odd.
 // So we must add new leaf to DAG.
-func AddNodeToDAG(cs Content, t *CommitDAG) (*Node, error) {
+func AddNodeToDAG(cs Content, t *CommitDAG) ([]byte, *CommitDAG, error) {
 	depth := int(math.Log2(float64(len(t.Nodes) + 2))) // calculate depth of DAG bu log(n) + 2
 	lastNode := t.Nodes[len(t.Nodes)-1]
 	if lastNode.leaf == true {
@@ -154,11 +154,11 @@ func AddNodeToDAG(cs Content, t *CommitDAG) (*Node, error) {
 			}
 			index := integerToBinaryString(upperLevelCount, depth-1)
 			updateNodesIndex(t, depth) // generate or update binary indexes of nodes
-			newNodeAdded, err := AddIntermediateNode(cs, t, depth, index)
+			_, err := AddIntermediateNode(cs, t, depth, index)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
-			return newNodeAdded, nil
+			return t.dagRoot, t, nil
 		}
 	} else if lastNode.leaf == false {
 		lastNodeLevelCount := len(t.Levels[len(t.Nodes[len(t.Nodes)-1].Index)])
@@ -170,7 +170,7 @@ func AddNodeToDAG(cs Content, t *CommitDAG) (*Node, error) {
 			AddNewLeafToDAG(cs, t, depth)
 		}
 	}
-	return t.Root, nil
+	return t.dagRoot, t, nil
 }
 
 // This function retrun an integer number for Leafs count of the DAG.

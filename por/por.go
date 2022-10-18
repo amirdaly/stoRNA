@@ -205,7 +205,6 @@ func Prove(q []QElement, authenticators []*big.Int, spk *rsa.PublicKey, file *os
 
 func Verify_two(tau Tau, q []QElement, mus []*big.Int, sigma *big.Int, spk *rsa.PublicKey) bool {
 	defer duration(track("Prove Runtime"))
-	// Todo: check that the values are in range
 	first := new(big.Int).SetInt64(1)
 	for _, qelem := range q {
 		hash := hashNameI(tau.Tau_zero.name, qelem.I)
