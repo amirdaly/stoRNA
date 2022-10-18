@@ -25,7 +25,7 @@ type PoSW_DAG struct {
 }
 
 type Node struct {
-	Tree    *PoSW_DAG
+	DAG     *PoSW_DAG
 	Parents []*Node
 	Left    *Node
 	Right   *Node
@@ -41,8 +41,8 @@ type Node struct {
 
 func NewDAGGenesis(cs Content, length int) (*PoSW_DAG, error) {
 	var defaultHashStrategy = sha256.New              // Default hash strategy for calculation
-	t := &PoSW_DAG{hashStrategy: defaultHashStrategy} // New tree call by refrence
-	var nodes []*Node                                 // Array for nodes of tree
+	t := &PoSW_DAG{hashStrategy: defaultHashStrategy} // New DAG call by refrence
+	var nodes []*Node                                 // Array for nodes of DAG
 	hash, err := cs.CalculateHash()                   // Calculate hash
 	if err != nil {
 		return nil, err
@@ -52,19 +52,19 @@ func NewDAGGenesis(cs Content, length int) (*PoSW_DAG, error) {
 		C:      cs,           // Field of Content in node structure
 		Data:   cs.GetData(), // Field of Data in node structure
 		leaf:   true,         // Is this node leaf?
-		Tree:   t,            // Pointer of tree of this node
-		Index:  "0",          // Index of node in binary string based of binary tree
+		DAG:    t,            // Pointer of DAG of this node
+		Index:  "0",          // Index of node in binary string based of binary DAG
 		done:   true,         // Is calculation completely Done?
 		Number: 1,            // Traversing Number of Node - first node is 1
 	})
 	t.Root = nodes[0]
 	t.Nodes = nodes
 	t.dagRoot = hash
-	emptyNode := &Node{Tree: t}
+	emptyNode := &Node{DAG: t}
 	level := make(map[int][]*Node)
 	level[0] = append(level[0], emptyNode)
 	level[1] = append(level[1], t.Nodes[0])
-	t.Nodes[0].Number = 1 //add navigation Number 1 to first node of tree
+	t.Nodes[0].Number = 1 //add navigation Number 1 to first node of DAG
 	t.Levels = level
 	if !setParentsToNode(t.Nodes[0], t) {
 		return nil, err
@@ -74,7 +74,7 @@ func NewDAGGenesis(cs Content, length int) (*PoSW_DAG, error) {
 
 func AddNewLeafToDAG(cs Content, t *PoSW_DAG, depth int) (*Node, error) {
 	updateNodesIndex(t, depth)                        // generate or update binary indexes of nodes
-	leafsCount := countLeafs(t)                       // count leafs of the tree
+	leafsCount := countLeafs(t)                       // count leafs of the DAG
 	traversingNumber := len(t.Nodes) + 1              // travering number of node is count of nodes + 1
 	index := integerToBinaryString(leafsCount, depth) // export string binary index of leaf
 
@@ -87,8 +87,8 @@ func AddNewLeafToDAG(cs Content, t *PoSW_DAG, depth int) (*Node, error) {
 		C:      cs,               // Field of Content in node structure
 		Data:   cs.GetData(),     // Field of Data in node structure
 		leaf:   true,             // Is this node leaf?
-		Tree:   t,                // Pointer of tree of this node
-		Index:  index,            // Index of node in binary string based of binary tree
+		DAG:    t,                // Pointer of DAG of this node
+		Index:  index,            // Index of node in binary string based of binary DAG
 		Number: traversingNumber, // Traversing Number of Node
 		done:   true,             // Is calculation completely Done?
 	}
@@ -112,7 +112,7 @@ func AddIntermediateNode(cs Content, t *PoSW_DAG, depth int, index string) (*Nod
 		C:      cs,
 		Data:   cs.GetData(),
 		leaf:   false,
-		Tree:   t,
+		DAG:    t,
 		Number: traversingNumber,
 		Index:  index,
 	}
@@ -127,13 +127,13 @@ func AddIntermediateNode(cs Content, t *PoSW_DAG, depth int, index string) (*Nod
 }
 
 func AddNodeToDAG(cs Content, t *PoSW_DAG) (*Node, error) {
-	depth := int(math.Log2(float64(len(t.Nodes) + 2))) // calculate depth of tree bu log(n) + 2
+	depth := int(math.Log2(float64(len(t.Nodes) + 2))) // calculate depth of DAG bu log(n) + 2
 	lastNode := t.Nodes[len(t.Nodes)-1]
-	// There are 4 if check for adding a new Node to tree
-	// 1: If lastNode of tree is leaf and leafs count is odd. So we must add another leaf to tree.
-	// 2: If lastNode of tree is leaf and leafs count is even. So we must add an upper parent to last 2 leafs. Its an intermediate node to tree.
-	// 3: If lastNode of tree is an intermediate node and count of nodes in that level is even. So we must add an other intermediate Node to tree.
-	// 4: If lastNode of tree is an intermediate node and count of nodes in that level is odd. So we must add new leaf to tree.
+	// There are 4 if check for adding a new Node to DAG
+	// 1: If lastNode of DAG is leaf and leafs count is odd. So we must add another leaf to DAG.
+	// 2: If lastNode of DAG is leaf and leafs count is even. So we must add an upper parent to last 2 leafs. Its an intermediate node to DAG.
+	// 3: If lastNode of DAG is an intermediate node and count of nodes in that level is even. So we must add an other intermediate Node to DAG.
+	// 4: If lastNode of DAG is an intermediate node and count of nodes in that level is odd. So we must add new leaf to DAG.
 	if lastNode.leaf == true {
 		if countLeafs(t)%2 != 0 {
 			AddNewLeafToDAG(cs, t, depth)
@@ -180,7 +180,7 @@ func updateNodesIndex(t *PoSW_DAG, depth int) bool {
 	lastDepth := len(t.Nodes[0].Index)
 	if (depth - lastDepth) >= 1 {
 		t.Levels = nil
-		emptyNode := &Node{Tree: t}
+		emptyNode := &Node{DAG: t}
 		level := make(map[int][]*Node)
 		level[0] = append(level[0], emptyNode)
 		for _, i := range t.Nodes {
@@ -200,7 +200,7 @@ func updateNodesIndex(t *PoSW_DAG, depth int) bool {
 func updateLevelsEntry(t *PoSW_DAG) bool {
 	T := false
 	t.Levels = nil
-	emptyNode := &Node{Tree: t}
+	emptyNode := &Node{DAG: t}
 	level := make(map[int][]*Node)
 	level[0] = append(level[0], emptyNode)
 	for _, i := range t.Nodes {
