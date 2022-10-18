@@ -1,4 +1,4 @@
-package merkletree
+package PoSW_DAG
 
 import (
 	"crypto/sha256"
@@ -15,7 +15,7 @@ type Content interface {
 	GetData() string
 }
 
-type MerkleTree struct {
+type PoSW_DAG struct {
 	Root         *Node
 	merkleRoot   []byte
 	Nodes        []*Node
@@ -25,7 +25,7 @@ type MerkleTree struct {
 }
 
 type Node struct {
-	Tree    *MerkleTree
+	Tree    *PoSW_DAG
 	Parents []*Node
 	Left    *Node
 	Right   *Node
@@ -39,11 +39,11 @@ type Node struct {
 	verify  []byte
 }
 
-func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
-	var defaultHashStrategy = sha256.New                // Default hash strategy for calculation
-	t := &MerkleTree{hashStrategy: defaultHashStrategy} // New tree call by refrence
-	var nodes []*Node                                   // Array for nodes of tree
-	hash, err := cs.CalculateHash()                     // Calculate hash
+func NewTreeGenesis(cs Content, length int) (*PoSW_DAG, error) {
+	var defaultHashStrategy = sha256.New              // Default hash strategy for calculation
+	t := &PoSW_DAG{hashStrategy: defaultHashStrategy} // New tree call by refrence
+	var nodes []*Node                                 // Array for nodes of tree
+	hash, err := cs.CalculateHash()                   // Calculate hash
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +72,7 @@ func NewTreeGenesis(cs Content, length int) (*MerkleTree, error) {
 	return t, nil
 }
 
-func AddNewLeafToTree(cs Content, t *MerkleTree, depth int) (*Node, error) {
+func AddNewLeafToTree(cs Content, t *PoSW_DAG, depth int) (*Node, error) {
 	updateNodesIndex(t, depth)                        // generate or update binary indexes of nodes
 	leafsCount := countLeafs(t)                       // count leafs of the tree
 	traversingNumber := len(t.Nodes) + 1              // travering number of node is count of nodes + 1
@@ -101,7 +101,7 @@ func AddNewLeafToTree(cs Content, t *MerkleTree, depth int) (*Node, error) {
 	return t.Root, nil
 }
 
-func AddIntermediateNode(cs Content, t *MerkleTree, depth int, index string) (*Node, error) {
+func AddIntermediateNode(cs Content, t *PoSW_DAG, depth int, index string) (*Node, error) {
 	traversingNumber := len(t.Nodes) + 1 // travering number of node is count of nodes + 1
 	hash, err := cs.CalculateHash()
 	if err != nil {
@@ -126,7 +126,7 @@ func AddIntermediateNode(cs Content, t *MerkleTree, depth int, index string) (*N
 	return t.Root, nil
 }
 
-func AddNodeToTree(cs Content, t *MerkleTree) (*Node, error) {
+func AddNodeToTree(cs Content, t *PoSW_DAG) (*Node, error) {
 	depth := int(math.Log2(float64(len(t.Nodes) + 2))) // calculate depth of tree bu log(n) + 2
 	lastNode := t.Nodes[len(t.Nodes)-1]
 	// There are 4 if check for adding a new Node to tree
@@ -165,7 +165,7 @@ func AddNodeToTree(cs Content, t *MerkleTree) (*Node, error) {
 	return t.Root, nil
 }
 
-func countLeafs(t *MerkleTree) int {
+func countLeafs(t *PoSW_DAG) int {
 	count := 0
 	for _, n := range t.Nodes {
 		if n.leaf == true {
@@ -175,7 +175,7 @@ func countLeafs(t *MerkleTree) int {
 	return count
 }
 
-func updateNodesIndex(t *MerkleTree, depth int) bool {
+func updateNodesIndex(t *PoSW_DAG, depth int) bool {
 	T := false
 	lastDepth := len(t.Nodes[0].Index)
 	if (depth - lastDepth) >= 1 {
@@ -197,7 +197,7 @@ func updateNodesIndex(t *MerkleTree, depth int) bool {
 	return T
 }
 
-func updateLevelsEntry(t *MerkleTree) bool {
+func updateLevelsEntry(t *PoSW_DAG) bool {
 	T := false
 	t.Levels = nil
 	emptyNode := &Node{Tree: t}
@@ -221,7 +221,7 @@ func integerToBinaryString(num int, length int) string {
 	return strings.Repeat("0", length-len(binaryString)) + binaryString
 }
 
-func setParentsToNode(node *Node, t *MerkleTree) bool {
+func setParentsToNode(node *Node, t *PoSW_DAG) bool {
 	var parentsIndexString []string
 	index := node.Index
 	if node.leaf == true { // this is leaf
@@ -261,7 +261,7 @@ func setParentsToNode(node *Node, t *MerkleTree) bool {
 	return true
 }
 
-func IsNodeInTree(Index string, t *MerkleTree) *Node {
+func IsNodeInTree(Index string, t *PoSW_DAG) *Node {
 	for _, i := range t.Nodes {
 		if i.Index == Index {
 			return i
@@ -274,7 +274,7 @@ func (n *Node) String() string {
 	return fmt.Sprintf("Number: %d | Index: %s | leaf: %t | hash: %x data: %s", n.Number, n.Index, n.leaf, n.Hash, n.Data)
 }
 
-func (m *MerkleTree) String() string {
+func (m *PoSW_DAG) String() string {
 	s := ""
 	for _, l := range m.Nodes {
 		s += fmt.Sprint(l)
@@ -283,7 +283,7 @@ func (m *MerkleTree) String() string {
 	return s
 }
 
-func printLevels(t *MerkleTree) {
+func printLevels(t *PoSW_DAG) {
 	for i := 0; i < len(t.Levels); i++ {
 		fmt.Printf("Level %d counted nodes are: %d\n", i, len(t.Levels[i]))
 		for t, j := range t.Levels[i] {
@@ -293,7 +293,7 @@ func printLevels(t *MerkleTree) {
 	}
 }
 
-func printLevel(t *MerkleTree, level int) {
+func printLevel(t *PoSW_DAG, level int) {
 	fmt.Printf("Level %d counted nodes are: %d\n", level, len(t.Levels[level]))
 	for t, j := range t.Levels[level] {
 

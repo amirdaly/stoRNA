@@ -6,8 +6,6 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
-	"merkletree/merkletree"
-	"merkletree/por"
 	"os"
 	"sort"
 	"time"
@@ -27,7 +25,7 @@ func (t TestContent) CalculateHash() ([]byte, error) {
 	}
 	return h.Sum(nil), nil
 }
-func (t TestContent) Equals(other merkletree.Content) (bool, error) {
+func (t TestContent) Equals(other PoSW_DAG.Content) (bool, error) {
 	return t.x == other.(TestContent).x, nil
 }
 func (t TestContent) GetData() string {
@@ -158,44 +156,44 @@ func main() {
 
 	// merkle tree run
 	t1 := TestContent{x: "a"}
-	t, err := merkletree.NewTreeGenesis(t1, 1)
+	t, err := PoSW_DAG.NewTreeGenesis(t1, 1)
 	if err != nil {
 		log.Fatal(err)
 	}
 	t2 := TestContent{x: "b"}
-	merkletree.AddNodeToTree(t2, t)
+	PoSW_DAG.AddNodeToTree(t2, t)
 	t3 := TestContent{x: "c"}
-	merkletree.AddNodeToTree(t3, t)
+	PoSW_DAG.AddNodeToTree(t3, t)
 	t4 := TestContent{x: "d"}
-	merkletree.AddNodeToTree(t4, t)
+	PoSW_DAG.AddNodeToTree(t4, t)
 	t5 := TestContent{x: "e"}
-	merkletree.AddNodeToTree(t5, t)
+	PoSW_DAG.AddNodeToTree(t5, t)
 	t6 := TestContent{x: "f"}
-	merkletree.AddNodeToTree(t6, t)
+	PoSW_DAG.AddNodeToTree(t6, t)
 	t7 := TestContent{x: "g"}
-	merkletree.AddNodeToTree(t7, t)
+	PoSW_DAG.AddNodeToTree(t7, t)
 	t8 := TestContent{x: "h"}
-	merkletree.AddNodeToTree(t8, t)
+	PoSW_DAG.AddNodeToTree(t8, t)
 	t9 := TestContent{x: "i"}
-	merkletree.AddNodeToTree(t9, t)
+	PoSW_DAG.AddNodeToTree(t9, t)
 	t10 := TestContent{x: "j"}
-	merkletree.AddNodeToTree(t10, t)
+	PoSW_DAG.AddNodeToTree(t10, t)
 	t11 := TestContent{x: "k"}
-	merkletree.AddNodeToTree(t11, t)
+	PoSW_DAG.AddNodeToTree(t11, t)
 	t12 := TestContent{x: "l"}
-	merkletree.AddNodeToTree(t12, t)
+	PoSW_DAG.AddNodeToTree(t12, t)
 	t13 := TestContent{x: "m"}
-	merkletree.AddNodeToTree(t13, t)
+	PoSW_DAG.AddNodeToTree(t13, t)
 	t14 := TestContent{x: "n"}
-	merkletree.AddNodeToTree(t14, t)
+	PoSW_DAG.AddNodeToTree(t14, t)
 	t15 := TestContent{x: "o"}
-	merkletree.AddNodeToTree(t15, t)
+	PoSW_DAG.AddNodeToTree(t15, t)
 	t16 := TestContent{x: "p"}
-	merkletree.AddNodeToTree(t16, t)
+	PoSW_DAG.AddNodeToTree(t16, t)
 	t17 := TestContent{x: "q"}
-	merkletree.AddNodeToTree(t17, t)
+	PoSW_DAG.AddNodeToTree(t17, t)
 	t18 := TestContent{x: "r"}
-	merkletree.AddNodeToTree(t18, t)
+	PoSW_DAG.AddNodeToTree(t18, t)
 
 	fmt.Println(t)
 	// for i := 0; i < len(t.Levels); i++ {
