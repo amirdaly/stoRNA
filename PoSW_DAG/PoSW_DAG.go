@@ -17,7 +17,7 @@ type Content interface {
 
 type PoSW_DAG struct {
 	Root         *Node
-	merkleRoot   []byte
+	dagRoot      []byte
 	Nodes        []*Node
 	Levels       map[int][]*Node
 	Leafs        []*Node
@@ -39,7 +39,7 @@ type Node struct {
 	verify  []byte
 }
 
-func NewTreeGenesis(cs Content, length int) (*PoSW_DAG, error) {
+func NewDAGGenesis(cs Content, length int) (*PoSW_DAG, error) {
 	var defaultHashStrategy = sha256.New              // Default hash strategy for calculation
 	t := &PoSW_DAG{hashStrategy: defaultHashStrategy} // New tree call by refrence
 	var nodes []*Node                                 // Array for nodes of tree
@@ -59,7 +59,7 @@ func NewTreeGenesis(cs Content, length int) (*PoSW_DAG, error) {
 	})
 	t.Root = nodes[0]
 	t.Nodes = nodes
-	t.merkleRoot = hash
+	t.dagRoot = hash
 	emptyNode := &Node{Tree: t}
 	level := make(map[int][]*Node)
 	level[0] = append(level[0], emptyNode)
@@ -72,7 +72,7 @@ func NewTreeGenesis(cs Content, length int) (*PoSW_DAG, error) {
 	return t, nil
 }
 
-func AddNewLeafToTree(cs Content, t *PoSW_DAG, depth int) (*Node, error) {
+func AddNewLeafToDAG(cs Content, t *PoSW_DAG, depth int) (*Node, error) {
 	updateNodesIndex(t, depth)                        // generate or update binary indexes of nodes
 	leafsCount := countLeafs(t)                       // count leafs of the tree
 	traversingNumber := len(t.Nodes) + 1              // travering number of node is count of nodes + 1
@@ -126,7 +126,7 @@ func AddIntermediateNode(cs Content, t *PoSW_DAG, depth int, index string) (*Nod
 	return t.Root, nil
 }
 
-func AddNodeToTree(cs Content, t *PoSW_DAG) (*Node, error) {
+func AddNodeToDAG(cs Content, t *PoSW_DAG) (*Node, error) {
 	depth := int(math.Log2(float64(len(t.Nodes) + 2))) // calculate depth of tree bu log(n) + 2
 	lastNode := t.Nodes[len(t.Nodes)-1]
 	// There are 4 if check for adding a new Node to tree
@@ -136,7 +136,7 @@ func AddNodeToTree(cs Content, t *PoSW_DAG) (*Node, error) {
 	// 4: If lastNode of tree is an intermediate node and count of nodes in that level is odd. So we must add new leaf to tree.
 	if lastNode.leaf == true {
 		if countLeafs(t)%2 != 0 {
-			AddNewLeafToTree(cs, t, depth)
+			AddNewLeafToDAG(cs, t, depth)
 		} else if countLeafs(t)%2 == 0 {
 			var upperLevelCount int
 			if depth == 2 && len(t.Nodes) <= 3 {
@@ -159,7 +159,7 @@ func AddNodeToTree(cs Content, t *PoSW_DAG) (*Node, error) {
 			index := lastNode.Index[:len(lastNode.Index)-1]
 			AddIntermediateNode(cs, t, depth, index)
 		} else if lastNodeLevelCount%2 != 0 {
-			AddNewLeafToTree(cs, t, depth)
+			AddNewLeafToDAG(cs, t, depth)
 		}
 	}
 	return t.Root, nil
@@ -261,7 +261,7 @@ func setParentsToNode(node *Node, t *PoSW_DAG) bool {
 	return true
 }
 
-func IsNodeInTree(Index string, t *PoSW_DAG) *Node {
+func IsNodeInDAG(Index string, t *PoSW_DAG) *Node {
 	for _, i := range t.Nodes {
 		if i.Index == Index {
 			return i
@@ -281,24 +281,6 @@ func (m *PoSW_DAG) String() string {
 		s += "\n"
 	}
 	return s
-}
-
-func printLevels(t *PoSW_DAG) {
-	for i := 0; i < len(t.Levels); i++ {
-		fmt.Printf("Level %d counted nodes are: %d\n", i, len(t.Levels[i]))
-		for t, j := range t.Levels[i] {
-
-			fmt.Println(t, j)
-		}
-	}
-}
-
-func printLevel(t *PoSW_DAG, level int) {
-	fmt.Printf("Level %d counted nodes are: %d\n", level, len(t.Levels[level]))
-	for t, j := range t.Levels[level] {
-
-		fmt.Println(t, j)
-	}
 }
 
 type NewContent struct {

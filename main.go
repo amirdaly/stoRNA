@@ -158,44 +158,44 @@ func main() {
 
 	// merkle tree run
 	t1 := TestContent{x: "a"}
-	t, err := PoSW_DAG.NewTreeGenesis(t1, 1)
+	t, err := PoSW_DAG.NewDAGGenesis(t1, 1)
 	if err != nil {
 		log.Fatal(err)
 	}
 	t2 := TestContent{x: "b"}
-	PoSW_DAG.AddNodeToTree(t2, t)
+	PoSW_DAG.AddNodeToDAG(t2, t)
 	t3 := TestContent{x: "c"}
-	PoSW_DAG.AddNodeToTree(t3, t)
+	PoSW_DAG.AddNodeToDAG(t3, t)
 	t4 := TestContent{x: "d"}
-	PoSW_DAG.AddNodeToTree(t4, t)
+	PoSW_DAG.AddNodeToDAG(t4, t)
 	t5 := TestContent{x: "e"}
-	PoSW_DAG.AddNodeToTree(t5, t)
+	PoSW_DAG.AddNodeToDAG(t5, t)
 	t6 := TestContent{x: "f"}
-	PoSW_DAG.AddNodeToTree(t6, t)
+	PoSW_DAG.AddNodeToDAG(t6, t)
 	t7 := TestContent{x: "g"}
-	PoSW_DAG.AddNodeToTree(t7, t)
+	PoSW_DAG.AddNodeToDAG(t7, t)
 	t8 := TestContent{x: "h"}
-	PoSW_DAG.AddNodeToTree(t8, t)
+	PoSW_DAG.AddNodeToDAG(t8, t)
 	t9 := TestContent{x: "i"}
-	PoSW_DAG.AddNodeToTree(t9, t)
+	PoSW_DAG.AddNodeToDAG(t9, t)
 	t10 := TestContent{x: "j"}
-	PoSW_DAG.AddNodeToTree(t10, t)
+	PoSW_DAG.AddNodeToDAG(t10, t)
 	t11 := TestContent{x: "k"}
-	PoSW_DAG.AddNodeToTree(t11, t)
+	PoSW_DAG.AddNodeToDAG(t11, t)
 	t12 := TestContent{x: "l"}
-	PoSW_DAG.AddNodeToTree(t12, t)
+	PoSW_DAG.AddNodeToDAG(t12, t)
 	t13 := TestContent{x: "m"}
-	PoSW_DAG.AddNodeToTree(t13, t)
+	PoSW_DAG.AddNodeToDAG(t13, t)
 	t14 := TestContent{x: "n"}
-	PoSW_DAG.AddNodeToTree(t14, t)
+	PoSW_DAG.AddNodeToDAG(t14, t)
 	t15 := TestContent{x: "o"}
-	PoSW_DAG.AddNodeToTree(t15, t)
+	PoSW_DAG.AddNodeToDAG(t15, t)
 	t16 := TestContent{x: "p"}
-	PoSW_DAG.AddNodeToTree(t16, t)
+	PoSW_DAG.AddNodeToDAG(t16, t)
 	t17 := TestContent{x: "q"}
-	PoSW_DAG.AddNodeToTree(t17, t)
+	PoSW_DAG.AddNodeToDAG(t17, t)
 	t18 := TestContent{x: "r"}
-	PoSW_DAG.AddNodeToTree(t18, t)
+	PoSW_DAG.AddNodeToDAG(t18, t)
 
 	fmt.Println(t)
 	// for i := 0; i < len(t.Levels); i++ {

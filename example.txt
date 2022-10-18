@@ -322,3 +322,23 @@
 		return t.Root, nil
 	}
 	return nil, nil
+
+
+
+    func printLevels(t *PoSW_DAG) {
+	for i := 0; i < len(t.Levels); i++ {
+		fmt.Printf("Level %d counted nodes are: %d\n", i, len(t.Levels[i]))
+		for t, j := range t.Levels[i] {
+
+			fmt.Println(t, j)
+		}
+	}
+}
+
+func printLevel(t *PoSW_DAG, level int) {
+	fmt.Printf("Level %d counted nodes are: %d\n", level, len(t.Levels[level]))
+	for t, j := range t.Levels[level] {
+
+		fmt.Println(t, j)
+	}
+}
