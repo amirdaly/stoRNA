@@ -126,7 +126,7 @@ func AddIntermediateNode(cs Content, t *CommitDAG, depth int, index string) (*No
 	return t.Root, nil
 }
 
-// This Function totaly add new Node to CommitDAG. It means that Proofs of Sequential Work and Binary MerkleTree
+// This Function totaly add new Node to CommitDAG. It means that Proofs of Sequential Work and Binary MerkleTree are both Supported.
 // There are 4 if check for adding a new Node to DAG
 // 1: If lastNode of DAG is leaf and leafs count is odd. So we must add another leaf to DAG.
 // 2: If lastNode of DAG is leaf and leafs count is even. So we must add an upper parent to last 2 leafs. Its an intermediate node to DAG.
