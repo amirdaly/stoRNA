@@ -342,3 +342,23 @@ func printLevel(t *PoSW_DAG, level int) {
 		fmt.Println(t, j)
 	}
 }
+
+type NewContent struct {
+	x string
+}
+
+func (t NewContent) CalculateHash() ([]byte, error) {
+
+	h := sha256.New()
+	if _, err := h.Write([]byte(t.x)); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
+}
+func (t NewContent) Equals(other Content) (bool, error) {
+	return false, nil
+}
+
+func (t NewContent) GetData() string {
+	return t.x
+}

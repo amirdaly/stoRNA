@@ -39,6 +39,7 @@ type Node struct {
 	verify  []byte
 }
 
+// This function Create a new DAG pointer and push first node as initialized node in it.
 func NewDAGGenesis(cs Content, length int) (*CommitDAG, error) {
 	var defaultHashStrategy = sha256.New               // Default hash strategy for calculation
 	t := &CommitDAG{hashStrategy: defaultHashStrategy} // New DAG call by refrence
@@ -72,6 +73,7 @@ func NewDAGGenesis(cs Content, length int) (*CommitDAG, error) {
 	return t, nil
 }
 
+// This function add new Leaf to DAG.
 func AddNewLeafToDAG(cs Content, t *CommitDAG, depth int) (*Node, error) {
 	updateNodesIndex(t, depth)                        // generate or update binary indexes of nodes
 	leafsCount := countLeafs(t)                       // count leafs of the DAG
@@ -101,6 +103,7 @@ func AddNewLeafToDAG(cs Content, t *CommitDAG, depth int) (*Node, error) {
 	return t.Root, nil
 }
 
+// Tis function add and Intermediate Node to DAG that is not a leaf.
 func AddIntermediateNode(cs Content, t *CommitDAG, depth int, index string) (*Node, error) {
 	traversingNumber := len(t.Nodes) + 1 // travering number of node is count of nodes + 1
 	hash, err := cs.CalculateHash()
@@ -126,12 +129,16 @@ func AddIntermediateNode(cs Content, t *CommitDAG, depth int, index string) (*No
 	return t.Root, nil
 }
 
-// This Function totaly add new Node to CommitDAG. It means that Proofs of Sequential Work and Binary MerkleTree are both Supported.
+// This Function totaly add new Node to CommitDAG. It means that Proofs of Sequential Work
+// and Binary MerkleTree are both Supported.
 // There are 4 if check for adding a new Node to DAG
 // 1: If lastNode of DAG is leaf and leafs count is odd. So we must add another leaf to DAG.
-// 2: If lastNode of DAG is leaf and leafs count is even. So we must add an upper parent to last 2 leafs. Its an intermediate node to DAG.
-// 3: If lastNode of DAG is an intermediate node and count of nodes in that level is even. So we must add an other intermediate Node to DAG.
-// 4: If lastNode of DAG is an intermediate node and count of nodes in that level is odd. So we must add new leaf to DAG.
+// 2: If lastNode of DAG is leaf and leafs count is even. So we must add an upper parent to
+// last 2 leafs. Its an intermediate node to DAG.
+// 3: If lastNode of DAG is an intermediate node and count of nodes in that level is even.
+// So we must add an other intermediate Node to DAG.
+// 4: If lastNode of DAG is an intermediate node and count of nodes in that level is odd.
+// So we must add new leaf to DAG.
 func AddNodeToDAG(cs Content, t *CommitDAG) (*Node, error) {
 	depth := int(math.Log2(float64(len(t.Nodes) + 2))) // calculate depth of DAG bu log(n) + 2
 	lastNode := t.Nodes[len(t.Nodes)-1]
@@ -166,6 +173,7 @@ func AddNodeToDAG(cs Content, t *CommitDAG) (*Node, error) {
 	return t.Root, nil
 }
 
+// This function retrun an integer number for Leafs count of the DAG.
 func countLeafs(t *CommitDAG) int {
 	count := 0
 	for _, n := range t.Nodes {
@@ -176,6 +184,8 @@ func countLeafs(t *CommitDAG) int {
 	return count
 }
 
+// This function get the DAG pointer and new Depth of DAG, then update each
+// nodes Lable index in binary string format.
 func updateNodesIndex(t *CommitDAG, depth int) bool {
 	T := false
 	lastDepth := len(t.Nodes[0].Index)
@@ -198,6 +208,7 @@ func updateNodesIndex(t *CommitDAG, depth int) bool {
 	return T
 }
 
+// This function get DAG pointer and reorder all arrays of levels of DAG.
 func updateLevelsEntry(t *CommitDAG) bool {
 	T := false
 	t.Levels = nil
@@ -214,6 +225,7 @@ func updateLevelsEntry(t *CommitDAG) bool {
 	return T
 }
 
+// This function get an integer number for convert to its binary string with length as second argument.
 func integerToBinaryString(num int, length int) string {
 	binaryString := strconv.FormatInt(int64(num), 2)
 	if len(binaryString) >= length {
@@ -222,6 +234,7 @@ func integerToBinaryString(num int, length int) string {
 	return strings.Repeat("0", length-len(binaryString)) + binaryString
 }
 
+// This function check each node, if node is a leaf then add a
 func setParentsToNode(node *Node, t *CommitDAG) bool {
 	var parentsIndexString []string
 	index := node.Index
@@ -262,6 +275,7 @@ func setParentsToNode(node *Node, t *CommitDAG) bool {
 	return true
 }
 
+// This function checks if a node is in DAG or not.
 func IsNodeInDAG(Index string, t *CommitDAG) *Node {
 	for _, i := range t.Nodes {
 		if i.Index == Index {
@@ -271,10 +285,14 @@ func IsNodeInDAG(Index string, t *CommitDAG) *Node {
 	return nil
 }
 
+// This is a helper function for converting *Node pointer to string with some data of it.
 func (n *Node) String() string {
-	return fmt.Sprintf("Number: %d | Index: %s | leaf: %t | hash: %x data: %s", n.Number, n.Index, n.leaf, n.Hash, n.Data)
+	return fmt.Sprintf(
+		"Number: %d | Index: %s | leaf: %t | hash: %x data: %s",
+		n.Number, n.Index, n.leaf, n.Hash, n.Data)
 }
 
+// This function is a helper function for export string for CommitDAG struct that print each nodes data.
 func (m *CommitDAG) String() string {
 	s := ""
 	for _, l := range m.Nodes {
@@ -282,24 +300,4 @@ func (m *CommitDAG) String() string {
 		s += "\n"
 	}
 	return s
-}
-
-type NewContent struct {
-	x string
-}
-
-func (t NewContent) CalculateHash() ([]byte, error) {
-
-	h := sha256.New()
-	if _, err := h.Write([]byte(t.x)); err != nil {
-		return nil, err
-	}
-	return h.Sum(nil), nil
-}
-func (t NewContent) Equals(other Content) (bool, error) {
-	return false, nil
-}
-
-func (t NewContent) GetData() string {
-	return t.x
 }
