@@ -1,6 +1,8 @@
 package main
 
 import (
+	"PoSW_DAG/PoSW_DAG"
+	"PoSW_DAG/por"
 	"crypto/sha256"
 	"fmt"
 	"io"
