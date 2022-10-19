@@ -51,11 +51,11 @@ func Store(fileName string) (*rsa.PublicKey, *os.File, Tau, []*big.Int, *rsa.Pub
 	return spk, &file, tg, authenticators, rs
 }
 
-func Prove(file *os.File, tag tau, rs *big.Int, depositTime int, auditFrequency int, []*big.Int, []*big.Int) {
+func Prove(filename string, tag tau, rs *big.Int, depositTime int, auditFrequency int) ([]byte, []*big.Int, []*big.Int) {
 	i := 0
 	st := rs
 	for et := 0; et <= depositTime; et++ {
-		spk, file, tau, authenticators, rs := store(file)
+		spk, file, tau, authenticators, rs := store(filename)
 		q := por.Verify_one(tag, spk)
 		mu, st = por.Prove(q, authenticators, spk, file)
 		i++
