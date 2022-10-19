@@ -51,7 +51,7 @@ func Store(fileName string) (*rsa.PublicKey, *os.File, Tau, []*big.Int, *rsa.Pub
 	return spk, &file, tg, authenticators, rs
 }
 
-func Prove(file *os.File, tag tau, rs *big.Int, depositTime int, auditFrequency int) {
+func Prove(file *os.File, tag tau, rs *big.Int, depositTime int, auditFrequency int, []*big.Int, []*big.Int) {
 	i := 0
 	st := rs
 	for et := 0; et <= depositTime; et++ {
@@ -60,9 +60,8 @@ func Prove(file *os.File, tag tau, rs *big.Int, depositTime int, auditFrequency 
 		mu, st = por.Prove(q, authenticators, spk, file)
 		i++
 		var t CommitDAG.CommitDAG
-		var c []int
-		c := make(map[int][]byte)
-		h := make(map[int][]byte)
+		var c []byte
+		var h, newProve []*big.Int
 		if i == 1 { // first node to genesis DAG
 			t1 := TestContent{x: st}
 			t, err := CommitDAG.NewDAGGenesis(t1)
@@ -78,7 +77,44 @@ func Prove(file *os.File, tag tau, rs *big.Int, depositTime int, auditFrequency 
 			}
 			c[i] = hash
 		}
-		h[i] = st.byte()
+		h[i] = st
+		newmu, pi[i] := por.Prove(q, authenticators, spk, file)
+		st = CommitDAG.Update(newProve[i], t.Node[i-1], t)
+		et = et + auditFrequency
+	}
+	return t.dagRoot, h, pi
+}
 
+func Verify(com []byte, t *CommitDAG, tag Tau, rs *rsa.PublicKey, spk *rsa.PublicKey, h []*big.Int, pi []*big.Int) bool {
+	for i:=0; i < len(t.Nodes); i++ {
+		if por.Verify_two(tag, q, mus h[i+1], pi[i+1], spk) == false {
+			return false
+		}
+		nodeParents := t.Nodes[i].Parents
+		if len(nodeParents) >= 1 {
+			var parentsSum []byte
+			for _, parent := range nodeParents {
+				parentsSum = parentsSum + parent.Hash
+			}
+			parentsHash := sha256.New()
+			if _, err := parentsHash.Write([]byte(parentsSum)); err != nil {
+				return nil, err
+			}
+			if t.Nodes[i].hash != parentsHash {
+				return false
+			}
+		} 
+		if t.Nodes[i].Left != nil && t.Nodes[i].Right != nil {
+			var parentsSum []byte
+			parentsSum = t.Nodes[i].Left.Hash + t.Nodes[i].Right.Hash
+			parentsHash := sha256.New()
+			if _, err := parentsHash.Write([]byte(parentsSum)); err != nil {
+				return nil, err
+			}
+			if t.Nodes[i].hash != parentsHash {
+				return false
+			}
+		}
+		return true
 	}
 }

@@ -173,6 +173,11 @@ func AddNodeToDAG(cs Content, t *CommitDAG) ([]byte, *CommitDAG, error) {
 	return t.dagRoot, t, nil
 }
 
+// This function update the state of node hash be calling
+func Update(cs Content, node *Node, t *CommitDAG) {
+
+}
+
 // This function retrun an integer number for Leafs count of the DAG.
 func countLeafs(t *CommitDAG) int {
 	count := 0
